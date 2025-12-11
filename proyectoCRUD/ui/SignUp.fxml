@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="proyectoCRUD.ui.SignUpController">
+   <children>
+      <TextField fx:id="tfName" layoutX="329.0" layoutY="262.0" prefHeight="25.0" prefWidth="157.0" promptText="Michael" />
+      <TextField fx:id="tfMidInit" layoutX="603.0" layoutY="262.0" prefHeight="25.0" prefWidth="70.0" promptText="D." />
+      <TextField fx:id="tfSurName" layoutX="331.0" layoutY="306.0" prefHeight="25.0" prefWidth="340.0" promptText="Schmich" />
+      <TextField fx:id="tfState" layoutX="331.0" layoutY="348.0" prefHeight="25.0" prefWidth="212.0" promptText="Florida" />
+      <TextField fx:id="tfZip" layoutX="601.0" layoutY="348.0" prefHeight="25.0" prefWidth="70.0" promptText="32459" />
+      <TextField fx:id="tfAdress" layoutX="331.0" layoutY="389.0" prefHeight="25.0" prefWidth="340.0" promptText="58 Charming Way, Santa Rosa Beach, FL 32459" />
+      <TextField fx:id="tfCity" layoutX="331.0" layoutY="436.0" prefHeight="25.0" prefWidth="340.0" promptText="Santa rosa beach" />
+      <TextField fx:id="tfEmail" layoutX="331.0" layoutY="479.0" prefHeight="25.0" prefWidth="340.0" promptText="samplemail@mydomain.com" />
+      <TextField fx:id="tfPhone" layoutX="331.0" layoutY="526.0" prefHeight="25.0" prefWidth="340.0" promptText="694206767" />
+      <PasswordField fx:id="pfPassw" layoutX="331.0" layoutY="571.0" prefHeight="25.0" prefWidth="340.0" />
+      <PasswordField fx:id="pfConfPassw" layoutX="331.0" layoutY="616.0" prefHeight="25.0" prefWidth="340.0" />
+      <Label layoutX="233.0" layoutY="267.0" prefHeight="15.0" prefWidth="76.0" text="First Name " />
+      <Label layoutX="501.0" layoutY="267.0" text="Middle Initial" />
+      <Label layoutX="235.0" layoutY="306.0" prefHeight="25.0" prefWidth="70.0" text="Last Name" />
+      <Label layoutX="266.0" layoutY="353.0" text="State" />
+      <Label layoutX="270.0" layoutY="441.0" text="City" />
+      <Label layoutX="263.0" layoutY="389.0" prefHeight="25.0" prefWidth="40.0" text="Street" />
+      <Label layoutX="557.0" layoutY="354.0" text="ZIP" />
+      <Label layoutX="263.0" layoutY="531.0" text="Phone" />
+      <Label layoutX="263.0" layoutY="484.0" text="E-Mail" />
+      <Label layoutX="240.0" layoutY="576.0" text="Password" />
+      <Label layoutX="189.0" layoutY="621.0" text="Confirm password" />
+      <Button fx:id="bbutton" layoutX="458.0" layoutY="682.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="109.0" text="Register" />
+      <ImageView fitHeight="105.0" fitWidth="265.0" layoutX="369.0" layoutY="122.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="proyectoCRUD/ui/resources/Logo.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="374.0" layoutY="652.0" text="Already have an account?" />
+      <Hyperlink fx:id="hlhyperlink" layoutX="544.0" layoutY="648.0" text="Sign In here" />
+      <Label layoutX="316.0" layoutY="485.0" text="?" textFill="#4b70db">
+         <font>
+            <Font size="11.0" />
+         </font>
+         <tooltip>
+            <Tooltip text="Format must be valid: sampleemail@mydomain.com" />
+         </tooltip>
+      </Label>
+      <Label layoutX="316.0" layoutY="532.0" text="?" textFill="#4b70db">
+         <font>
+            <Font size="11.0" />
+         </font>
+         <tooltip>
+            <Tooltip text="Enter a valid number" />
+         </tooltip>
+      </Label>
+      <Label layoutX="316.0" layoutY="577.0" text="?" textFill="#4b70db">
+         <font>
+            <Font size="11.0" />
+         </font>
+         <tooltip>
+            <Tooltip text="Password must contain:&#10;* More than 5 characters&#10;* Less than 30 characters&#10;* At least one upper case&#10;* At least one number" />
+         </tooltip>
+      </Label>
+      <Label fx:id="errorLabelName" layoutX="691.0" layoutY="267.0" prefHeight="15.0" prefWidth="225.0" text="" />
+      <Label fx:id="errorLabelSurName" layoutX="691.0" layoutY="311.0" prefHeight="15.0" prefWidth="225.0" text="" />
+      <Label fx:id="errorLabelState" layoutX="691.0" layoutY="354.0" prefHeight="15.0" prefWidth="225.0" text="" />
+      <Label fx:id="errorLabelStreet" layoutX="691.0" layoutY="394.0" prefHeight="15.0" prefWidth="225.0" text="" />
+      <Label fx:id="errorLabelCity" layoutX="691.0" layoutY="441.0" prefHeight="15.0" prefWidth="225.0" text="" />
+      <Label fx:id="errorLabelEmail" layoutX="691.0" layoutY="484.0" prefHeight="15.0" prefWidth="225.0" text="" />
+      <Label fx:id="errorLabelPhone" layoutX="691.0" layoutY="531.0" prefHeight="15.0" prefWidth="225.0" text="" />
+      <Label fx:id="errorLabelPassw" layoutX="691.0" layoutY="577.0" prefHeight="15.0" prefWidth="225.0" text="" />
+      <Label fx:id="errorLabelConfPassw" layoutX="691.0" layoutY="621.0" prefHeight="15.0" prefWidth="225.0" text="" />
+   </children>
+</Pane>
