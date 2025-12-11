@@ -22,6 +22,12 @@ import javax.ws.rs.client.WebTarget;
  *
  * @author miguel
  */
+
+
+
+
+
+
 public class MovementRESTClient {
 
     private WebTarget webTarget;
