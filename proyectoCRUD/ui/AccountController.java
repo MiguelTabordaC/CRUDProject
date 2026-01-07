@@ -6,29 +6,33 @@
 package proyectoCRUD.ui;
 
 import java.util.logging.Logger;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 /**
  *
- * @author luisf
+ * @author luis felipe
  */
 public class AccountController {
    
     @FXML
     private TextField tfEmail;
     @FXML
-    private PasswordField pfPassword;
+    private Button btnUpgrade;
     @FXML
-    private Hyperlink Register;
+    private Button btnUpdate;
     @FXML
-    private Button btnLogin;
+    private Button btnDelete;
     @FXML
     private Button btnExit;
     private static final Logger LOGGER = Logger.getLogger("projectinterfaces.ui");
@@ -45,15 +49,44 @@ public class AccountController {
         stage.setScene(scene);
         this.stage=stage;
         //Establecer el titulo de la ventana
-        stage.setTitle("Sign In");
+        stage.setTitle("Account");
         //La ventana no es redimensionable
-        stage.setResizable(false);
+        //stage.setResizable(false);
         //El botón Login esta deshabilitado y el botón Exit esta habilitado.
-        btnLogin.setDisable(true);
-        btnExit.setDisable(false);
+        //btnLogin.setDisable(true);
+        //btnExit.setDisable(false);
         //Asociar eventos a manejadores
-
+        btnExit.setOnAction(this::handleExitOnAction);
         //Mostrar la ventana
         stage.show();
+    }
+     private void handleExitOnAction(ActionEvent event) {
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+                "Are you sure you want to go out?",
+                ButtonType.YES, ButtonType.NO);
+        alert.setTitle("¡Confirm Exit!");
+        alert.showAndWait();
+
+        if (alert.getResult() == ButtonType.YES) {
+            //Lanzamos la ventana emergente para pedir confirmación de salida
+            Stage stage = (Stage) btnExit.getScene().getWindow();
+            stage.close();
+        }
+
+    }
+     private void handleClose(WindowEvent event){
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+                "Are you sure you want to go out?",
+                ButtonType.YES, ButtonType.NO);
+        alert.setTitle("¡Confirm Exit!");
+        alert.showAndWait();
+
+        if (alert.getResult() == ButtonType.YES) {
+            //Lanzamos la ventana emergente para pedir confirmación de salida
+            Stage stage = (Stage) btnExit.getScene().getWindow();
+            stage.close();
+        }
+            
     }
 }

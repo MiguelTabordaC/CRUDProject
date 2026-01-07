@@ -1,23 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="414.0" prefWidth="611.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="proyectoCRUD.ui.AccountController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" 
+      minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" 
+      style="-fx-background-color: FFFFFF;" xmlns="http://javafx.com/javafx/8" 
+      xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="proyectoCRUD.ui.AccountController">
    <children>
-      <Label layoutX="36.0" layoutY="41.0" text="Account" />
-      <ChoiceBox layoutX="36.0" layoutY="66.0" prefWidth="150.0" />
-      <TitledPane animated="false" layoutX="29.0" layoutY="143.0" prefHeight="206.0" prefWidth="474.0" text="Account">
-        <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-        </content>
-      </TitledPane>
-      <ScrollBar layoutX="30.0" layoutY="356.0" prefHeight="14.0" prefWidth="474.0" />
-      <Button layoutX="526.0" layoutY="168.0" mnemonicParsing="false" text="Upgrade" />
-      <Button layoutX="526.0" layoutY="207.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="62.0" text="Update" />
-      <Button layoutX="526.0" layoutY="246.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="62.0" text="Delete" />
-      <Button layoutX="526.0" layoutY="361.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="62.0" text="Exit" />
+      <Label layoutX="29.0" layoutY="212.0" text="Account" />
+      <ChoiceBox layoutX="29.0" layoutY="237.0" prefHeight="25.0" prefWidth="297.0" />
+      <TitledPane animated="false" layoutX="29.0" layoutY="294.0" prefHeight="382.0" prefWidth="661.0" text="Account">
+         <content>
+            <TableView prefHeight="200.0" prefWidth="200.0">
+              <columns>
+                <TableColumn prefWidth="75.0" text="C1" />
+                <TableColumn prefWidth="75.0" text="C2" />
+                  <TableColumn prefWidth="75.0" text="C3" />
+                  <TableColumn prefWidth="75.0" text="C4" />
+                  <TableColumn prefWidth="75.0" text="C5" />
+                  <TableColumn prefWidth="75.0" text="C6" />
+                  <TableColumn prefWidth="75.0" text="C7" />
+              </columns>
+            </TableView>
+         </content></TitledPane>
+      <Button fx:id="btnUpgrade" layoutX="799.0" layoutY="294.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="95.0" text="Upgrade" />
+      <Button fx:id="btnUpdate" layoutX="799.0" layoutY="359.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="95.0" text="Update" />
+      <Button fx:id="btnDelete" layoutX="799.0" layoutY="428.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="95.0" text="Delete" />
+      <Button fx:id="btnExit" layoutX="799.0" layoutY="651.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="95.0" text="Exit" />
+      <ScrollBar layoutX="29.0" layoutY="686.0" prefHeight="14.0" prefWidth="661.0" />
+      <ImageView fitHeight="165.0" fitWidth="240.0" layoutX="393.0" layoutY="24.0">
+         <image>
+            <Image url="proyectoCRUD/ui/resources/Logo.png"/>
+         </image>
+      </ImageView>
    </children>
 </Pane>

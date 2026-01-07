@@ -10,19 +10,21 @@ import static javafx.application.Application.launch;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.stage.Stage;
-import proyectoCRUD.ui.SignUpController;
+import proyectoCRUD.ui.AccountController;
 
 /**
  *
- * @author luisf
+ * @author luis felipe
  */
 public class AccountApplication extends Application {
     
      @Override
     public void start(Stage stage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("proyectoCRUD/ui/Account.fxml"));
+        
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("ui/Account.fxml"));
         Parent root = (Parent)loader.load();
-        SignUpController controller = loader.getController();
+        AccountController controller = loader.getController();
+        
         controller.init(stage, root);
    
     }
