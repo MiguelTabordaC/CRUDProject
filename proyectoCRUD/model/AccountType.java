@@ -6,9 +6,19 @@
 package proyectoCRUD.model;
 
 /**
- *
- * @author miguel
+ * Accounts types for Account instances: standard or credit type.
+ * @author Javier Martín Uría
  */
-public class AccountType {
-    
+public enum AccountType {
+    /**
+     * Type of account used by Customers to keep savings an allows debit 
+     * withdrawals, deposit and funds transfers.
+     */
+    STANDARD,
+    /**
+     * Type of account used by Customers to make payments, charges and funds transfers.
+     * This type includes a credit limit greater than zero that allows credit operations 
+     * to that limit. 
+     */
+    CREDIT;
 }
