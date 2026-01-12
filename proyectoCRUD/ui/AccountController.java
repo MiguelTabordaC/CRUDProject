@@ -5,22 +5,26 @@
  */
 package proyectoCRUD.ui;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
-import javafx.event.ActionEvent;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
+import proyectoCRUD.logic.AccountRESTClient;
+import proyectoCRUD.model.Account;
+import proyectoCRUD.model.Customer;
 
 /**
  *
@@ -33,11 +37,15 @@ public class AccountController {
     @FXML
     private Button btnUpgrade;
     @FXML
-    private Button btnUpdate;
+    private Button btnRefresh;
+     @FXML
+    private Button btnMovement;
     @FXML
     private Button btnDelete;
     @FXML
     private Button btnExit;
+    @FXML
+    private TableView Account;
     @FXML
     private TableColumn tcId;
     @FXML
@@ -57,7 +65,7 @@ public class AccountController {
           
     private static final Logger LOGGER = Logger.getLogger("projectinterfaces.ui");
     private Stage stage;
-    private String password;
+    private Customer customer;
     
     /**
     * Inicializa la etapa principal de la ventana Iniciar sesión.
@@ -84,23 +92,34 @@ public class AccountController {
         //btnExit.setDisable(false);
         //Asociar eventos a manejadores
         btnExit.setOnAction(this::handleExitOnAction);
-        tcId.setCellValueFactory(new PropertyValueFactory<>("ID"));
-        tcDescription.setCellValueFactory(new PropertyValueFactory<>("DESCRIPTION"));
-        
-        tcType.setCellValueFactory(new PropertyValueFactory<>("TYPE"));
-        tcCreditLine.setCellValueFactory(new PropertyValueFactory<>("CREDITLINE"));
+        tcId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        tcDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
+        tcType.setCellValueFactory(new PropertyValueFactory<>("type"));
+        tcCreditLine.setCellValueFactory(new PropertyValueFactory<>("beginBalance"));
+        tcDate.setCellValueFactory(new PropertyValueFactory<>("balance"));
+        tcCreditLine.setCellValueFactory(new PropertyValueFactory<>("creditLine"));
         tcDate.setCellValueFactory(new PropertyValueFactory<>("DATE"));
         
         //Mostrar la ventana
         stage.show();
         //Cerrar la ventana
-         stage.setOnCloseRequest(this::handleClose);
+         stage.setOnCloseRequest(this::handleExitOnAction);
+        //Carga de datos en la tabla
+        AccountRESTClient client= new AccountRESTClient();
+        Account[] paco= client.findAccountsByCustomerId_XML(Account[].class, "345678401");
+        List<Account> usersData= FXCollections.observableArrayList(paco);
+       
+        Account.setItems((ObservableList)usersData);
+        
+        
+        
     }
+     
     /**
      * 
      * @param event Manejador del boton exit
      */
-     private void handleExitOnAction(ActionEvent event) {
+     private void handleExitOnAction(Event event) {
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
                 "Are you sure you want to go out?",
@@ -112,25 +131,15 @@ public class AccountController {
             //Lanzamos la ventana emergente para pedir confirmación de salida
             Stage stage = (Stage) btnExit.getScene().getWindow();
             stage.close();
-        }
-
-    }
-     /**
-      * 
-      * @param event Manejador del cierre de la ventana
-      */
-     private void handleClose(WindowEvent event){
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
-                "Are you sure you want to go out?",
-                ButtonType.YES, ButtonType.NO);
-        alert.setTitle("¡Confirm Exit!");
-        alert.showAndWait();
-
-        if (alert.getResult() == ButtonType.YES) {
-            //Lanzamos la ventana emergente para pedir confirmación de salida
-            Stage stage = (Stage) btnExit.getScene().getWindow();
-            stage.close();
-        }
             
+        }
+        event.consume();
+
     }
+     private void setCustomer(Customer customer){
+         
+         this.customer=customer;
+         
+     }
+     
 }
