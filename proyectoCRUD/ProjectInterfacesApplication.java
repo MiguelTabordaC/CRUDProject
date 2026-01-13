@@ -23,9 +23,9 @@ public class ProjectInterfacesApplication extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("ui/Account.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("ui/ProyectoSignIn.fxml"));
         Parent root = (Parent)loader.load();
-        AccountController controller = loader.getController();
+        ProjectInterfacesController controller = loader.getController();
         
         controller.init(stage, root);
        

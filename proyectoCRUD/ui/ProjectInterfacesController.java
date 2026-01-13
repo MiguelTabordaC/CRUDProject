@@ -9,6 +9,7 @@ import proyectoCRUD.model.Customer;
 import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -75,6 +76,7 @@ public class ProjectInterfacesController {
 
         //Mostrar la ventana
         stage.show();
+        stage.setOnCloseRequest(this::handleExitOnAction);
     }
     /**
     * Inicializa la etapa principal de la ventana Iniciar sesión.
@@ -134,11 +136,11 @@ public class ProjectInterfacesController {
             alert.setContentText("¡Welcome "+customer.getFirstName()+"!");
             alert.showAndWait();
         //Abrir la ventana de change password
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("ChangePassword.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Account.fxml"));
             Parent root = loader.load();
-            ChangePasswordController controller = loader.getController();
+            AccountController controller = loader.getController();
         
-            controller.setCustomer(customer);
+            //controller.setCustomer(customer);
             controller.init(this.stage, root);
           
 
@@ -208,7 +210,7 @@ public class ProjectInterfacesController {
     * @return verdadero si el campo de contraseña contiene texto; falso en caso contrario.
      */
 
-    private void handleExitOnAction(ActionEvent event) {
+    private void handleExitOnAction(Event event) {
 
         Alert alert = new Alert(AlertType.CONFIRMATION,
                 "Are you sure you want to go out?",
@@ -216,11 +218,13 @@ public class ProjectInterfacesController {
         alert.setTitle("¡Confirm Exit!");
         alert.showAndWait();
 
-        if (alert.getResult() == ButtonType.YES) {
+       if (alert.getResult() == ButtonType.YES) {
             //Lanzamos la ventana emergente para pedir confirmación de salida
             Stage stage = (Stage) btnExit.getScene().getWindow();
             stage.close();
+
         }
+        event.consume();
 
     }
     /**

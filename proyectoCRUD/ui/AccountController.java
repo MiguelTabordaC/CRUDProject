@@ -6,6 +6,7 @@
 package proyectoCRUD.ui;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
@@ -26,6 +27,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import proyectoCRUD.logic.AccountRESTClient;
 import proyectoCRUD.model.Account;
+import proyectoCRUD.model.AccountType;
 import proyectoCRUD.model.Customer;
 
 /**
@@ -47,26 +49,27 @@ public class AccountController {
     @FXML
     private Button btnExit;
     @FXML
-    private TableView tbvAccounts;
+    private TableView<Account> tbvAccounts;
     @FXML
-    private TableColumn tcId;
+    private TableColumn<Account, Long> tcId;
     @FXML
-    private TableColumn tcDescription;
+    private TableColumn<Account, String> tcDescription;
     @FXML
-    private TableColumn tcType;
+    private TableColumn<Account, AccountType> tcType;
     @FXML
-    private TableColumn tcBeginBalance;
+    private TableColumn<Account, Double> tcBeginBalance;
     @FXML
-    private TableColumn tcBalance;
+    private TableColumn<Account, Double> tcBalance;
     @FXML
-    private TableColumn tcCreditLine;
+    private TableColumn<Account, Double> tcCreditLine;
     @FXML
-    private TableColumn tcBeginBalanceTimestamp;
-
+    private TableColumn<Account, Date> tcBeginBalanceTimestamp;
+    
+    private ObservableList<Account> accountsData;
     private static final Logger LOGGER = Logger.getLogger("projectinterfaces.ui");
     private Stage stage;
     private Customer customer;
-    AccountRESTClient client = new AccountRESTClient();
+    private final AccountRESTClient client = new AccountRESTClient();
 
     /**
      * Inicializa la etapa principal de la ventana Iniciar sesión. Configura la
@@ -136,7 +139,22 @@ public class AccountController {
             stage.close();
 
         }
+         try {
+           
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("ProyectSignIn.fxml"));
+            Parent root = loader.load();
+            
+           ProjectInterfacesController controller = loader.getController();
+            controller.init(this.stage,root);
+            
+
+        } catch (Exception e) {
+            LOGGER.warning(e.getMessage());
+            handleAlert("¡Error, when going to registry!");
+        }
         event.consume();
+       
 
     }
 
