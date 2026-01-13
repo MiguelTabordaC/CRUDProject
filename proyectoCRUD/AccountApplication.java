@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package proyectoCRUD;
+/*package proyectoCRUD;
 
 import javafx.application.Application;
 import static javafx.application.Application.launch;
@@ -16,7 +16,7 @@ import proyectoCRUD.ui.AccountController;
  *
  * @author luis felipe
  */
-public class AccountApplication extends Application {
+/*public class AccountApplication extends Application {
     
      @Override
     public void start(Stage stage) throws Exception {
@@ -33,8 +33,9 @@ public class AccountApplication extends Application {
      * @param args the command line arguments
      */
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         launch(args);
     }
 }
 
+*/

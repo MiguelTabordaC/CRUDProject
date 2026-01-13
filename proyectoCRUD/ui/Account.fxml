@@ -12,15 +12,15 @@
          <font>
             <Font name="System Bold" size="20.0" />
          </font></Label>
-      <TableView fx:id="Account" layoutX="14.0" layoutY="207.0" prefHeight="357.0" prefWidth="879.0">
+      <TableView fx:id="tbvAccounts" layoutX="14.0" layoutY="207.0" prefHeight="357.0" prefWidth="879.0">
         <columns>
           <TableColumn fx:id="tcId" prefWidth="75.0" text="ID" />
           <TableColumn fx:id="tcDescription" prefWidth="207.0" text="DESCRIPTION" />
             <TableColumn fx:id="tcType" prefWidth="68.0" text="TYPE" />
-            <TableColumn fx:id="tcBegingBalance" prefWidth="148.0" text="BEGING BALNACE" />
+            <TableColumn fx:id="tcBeginBalance" prefWidth="148.0" text="BEGIN BALNACE" />
             <TableColumn fx:id="tcBalance" prefWidth="120.0" text="BALANCE" />
             <TableColumn fx:id="tcCreditLine" prefWidth="147.0" text="CREDIT LINE" />
-            <TableColumn fx:id="tcDate" prefWidth="113.0" text="DATE" />
+            <TableColumn fx:id="tcBeginBalanceTimestamp" prefWidth="113.0" text="DATE" />
         </columns>
       </TableView>
       <Button fx:id="btnUpgrade" layoutX="904.0" layoutY="468.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="95.0" text="Movements" />

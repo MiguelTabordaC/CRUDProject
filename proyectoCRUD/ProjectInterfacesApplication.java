@@ -11,6 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import proyectoCRUD.ui.AccountController;
 import proyectoCRUD.ui.ProjectInterfacesController;
 
 /**
@@ -22,9 +23,9 @@ public class ProjectInterfacesApplication extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("ui/ProyectoSignIn.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("ui/Account.fxml"));
         Parent root = (Parent)loader.load();
-        ProjectInterfacesController controller = loader.getController();
+        AccountController controller = loader.getController();
         
         controller.init(stage, root);
        
