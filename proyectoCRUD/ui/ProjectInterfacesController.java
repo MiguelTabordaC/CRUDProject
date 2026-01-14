@@ -120,26 +120,35 @@ public class ProjectInterfacesController {
 
     private void handleLoginOnAction(ActionEvent event) {
         try {
-            //Comprobación de los campos
-            if(!tfEmail.getText().matches("^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,}$") || tfEmail.getText().isEmpty()){
-                throw new Exception("¡Email and password must be to filled!");
+            if(tfEmail.getText().equals("admin")&& pfPassword.getText().equals("admin")){
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("Crud_Customer.fxml"));
+                Parent root = loader.load();
+                CrudCustomerController controller = loader.getController();
+                controller.init(this.stage, root);
             }
-            //Crear un objeto customer
-            CustomerRESTClient client = new CustomerRESTClient();
+            else{
+                //Comprobación de los campos
+                if(!tfEmail.getText().matches("^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,}$") || tfEmail.getText().isEmpty()){
+                throw new Exception("¡Email and password must be filled!");
+                }
+                //Crear un objeto customer
+                CustomerRESTClient client = new CustomerRESTClient();
 
-            Customer customer = client.findCustomerByEmailPassword_XML(Customer.class,
-                    tfEmail.getText().trim(), pfPassword.getText().trim());
+                Customer customer = client.findCustomerByEmailPassword_XML(Customer.class,
+                        tfEmail.getText().trim(), pfPassword.getText().trim());
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setContentText("¡Welcome "+customer.getFirstName()+"!");
+                alert.showAndWait();
+            //Abrir la ventana de change password
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("ChangePassword.fxml"));
+                Parent root = loader.load();
+                ChangePasswordController controller = loader.getController();
+
+                controller.setCustomer(customer);
+                controller.init(this.stage, root);
+            }
             
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setContentText("¡Welcome "+customer.getFirstName()+"!");
-            alert.showAndWait();
-        //Abrir la ventana de change password
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("ChangePassword.fxml"));
-            Parent root = loader.load();
-            ChangePasswordController controller = loader.getController();
-        
-            controller.setCustomer(customer);
-            controller.init(this.stage, root);
           
 
             

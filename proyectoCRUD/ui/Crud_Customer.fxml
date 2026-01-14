@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1366.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="proyectoCRUD.ui.CrudCustomerController">
+   <children>
+      <Label layoutX="79.0" layoutY="116.0" prefHeight="19.0" prefWidth="202.0" text="Customers administration">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <TableView fx:id="tbCustomers" layoutX="49.0" layoutY="171.0" prefHeight="573.0" prefWidth="1227.0">
+        <columns>
+          <TableColumn fx:id="tbID" prefWidth="108.0" text="ID" />
+          <TableColumn fx:id="tbName" prefWidth="99.0" text="Name" />
+            <TableColumn fx:id="tbMidInit" prefWidth="64.0" text="M.I" />
+            <TableColumn fx:id="tbSurname" prefWidth="118.0" text="Surname" />
+            <TableColumn fx:id="tbStreet" prefWidth="100.0" text="Street" />
+            <TableColumn fx:id="tbCity" prefWidth="95.0" text="City" />
+            <TableColumn fx:id="tbState" prefWidth="101.0" text="State" />
+            <TableColumn fx:id="tbZip" prefWidth="103.0" text="ZIP" />
+            <TableColumn fx:id="tbEmail" prefWidth="176.0" text="Email" />
+            <TableColumn fx:id="tbPhone" prefWidth="128.0" text="Phone" />
+            <TableColumn fx:id="tbPassw" prefWidth="134.0" text="Password" />
+        </columns>
+      </TableView>
+      <Button layoutX="8.0" layoutY="714.0" mnemonicParsing="false" prefHeight="19.0" prefWidth="17.0" text="+">
+         <font>
+            <Font size="16.0" />
+         </font></Button>
+      <Button fx:id="bExit" layoutX="1288.0" layoutY="717.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="69.0" style="-fx-background-color: red; -fx-font-weight: bold;" text="Exit" />
+      <Line endX="1125.0" layoutX="149.0" layoutY="150.0" startX="-100.0" />
+   </children>
+</Pane>
