@@ -15,9 +15,9 @@
        <children>
           <TableView fx:id="tbMovement" layoutX="79.0" layoutY="144.0" prefHeight="317.0" prefWidth="856.0">
             <columns>
-                <TableColumn fx:id="tbColDate" minWidth="0.0" prefWidth="174.0" text="DATE" />
-              <TableColumn fx:id="tbColAmount" prefWidth="219.0" text="AMOUNT" />
-                <TableColumn fx:id="tbColType" prefWidth="227.0" text="TYPE" />
+                <TableColumn fx:id="tbColDate" minWidth="0.0" prefWidth="245.0" text="DATE" />
+              <TableColumn fx:id="tbColAmount" prefWidth="210.0" text="AMOUNT" />
+                <TableColumn fx:id="tbColType" prefWidth="165.0" text="TYPE" />
               <TableColumn fx:id="tbColBalance" prefWidth="235.0" text="BALANCE" />
             </columns>
           </TableView>
