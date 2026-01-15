@@ -20,10 +20,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javax.ws.rs.InternalServerErrorException;
@@ -44,18 +45,10 @@ public class MovementController {
     private Button btUndo;
     @FXML
     private Button btCancel;
-    /*@FXML
-    private TableView tbMovement;
     @FXML
-    private TableColumn tbColDate;
+    private Label lbIdAcount;
     @FXML
-    private TableColumn tbColAmount;
-    @FXML
-    private TableColumn tbColType;
-    @FXML
-    private TableColumn tbColBalance;
-    @FXML
-     */
+    private TextField tfAmount;
     @FXML
     private TableView<Movement> tbMovement;
     @FXML
@@ -66,13 +59,9 @@ public class MovementController {
     private TableColumn<Movement, String> tbColType;
     @FXML
     private TableColumn<Movement, String> tbColBalance;
-
-    private SplitMenuButton selectAccount;
     @FXML
-    private DatePicker datePickDesde;
-    @FXML
-    private DatePicker datePickHasta;
-
+    private SplitMenuButton selectType;
+    
     private Customer customer;
     private Stage stage;
     private static final Logger LOGGER = Logger.getLogger("ProjectInterfacesApplication.ui");
@@ -90,9 +79,11 @@ public class MovementController {
 
             //stage.setOnCloseRequest();
             btNewMovement.setDisable(false);
-            btUndo.setDisable(true);
+            //btUndo.setDisable(true);
             btCancel.setDisable(false);
 
+            tfAmount.focusedProperty().addListener(this::handleAmountOnFocusedChange);
+            
             btNewMovement.setOnAction(this::handlebtNewMovementOnAction);
             btUndo.setOnAction(this::handlebtUndoOnAction);
             btCancel.setOnAction(this::handlebtCancelOnAction);
@@ -108,10 +99,10 @@ public class MovementController {
 
             ObservableList<Movement> movements = FXCollections.observableArrayList(restClient.findMovementByAccount_XML(
                     new GenericType<List<Movement>>() {},id));
-            
+            lbIdAcount.setText(id);
             tbMovement.setItems(movements);
             LOGGER.info(movements.toString());
-
+            
         } catch (Exception e) {
             //new Alert(AlertType.INFORMATION,e.getLocalizedMessage()).showAndWait();
             //LOGGER.warning(e.getLocalizedMessage());
@@ -127,7 +118,22 @@ public class MovementController {
     }
 
     private void handleMovementTableSelectionChanged(ObservableValue observable, Object odlValue, Object newValue) {
-
+        try{ 
+            
+        }
+        catch(Exception e){
+        }
+    }
+    private void handleAmountOnFocusedChange(ObservableValue observable, Boolean oldValue, Boolean newValue){
+        try{
+        if(oldValue){
+            
+            }
+        }
+        //Catches the error and writes it in a label
+        catch (Exception e){
+            LOGGER.info(e.getMessage());
+        }
     }
 
     //BOTONES
@@ -154,12 +160,34 @@ public class MovementController {
     }
 
     private void handlebtUndoOnAction(ActionEvent event) {
-        tbMovement.getItems().remove(tbMovement.getSelectionModel().getSelectedItem());
-        tbMovement.refresh();
+        try{
+            tbColDate.
+            Date lastMovement;
+            for (int i = 0; i < tbColDate.size(); i++) {
+                lastMovement = tbColDate.forEach(tbColDate.getCellData());
+                if(tbMovement.getItems().getCellData(i).
+                        
+                        compareTo(lastMovement)){
+                    
+                }
+            
+            }
+            tbMovement.getItems().get(tbMovement.getItems().size()-1).getId();
+            
+            tbMovement.getItems().remove(tbMovement.getItems().size()-1);
+            tbMovement.refresh();
+        }
+        }
+        catch(Exception e){
+        }
     }
 
     private void handlebtNewMovementOnAction(ActionEvent event) {
-        //tbMovement.getItems().add(new Movement(tbColDate.getTimestamp(),tbColAmount.getAmount()));
+        try{ 
+            
+        }
+        catch(Exception e){
+        } //tbMovement.getItems().add(new Movement(tbColDate.getTimestamp(),tbColAmount.getAmount()));
 
     }
 

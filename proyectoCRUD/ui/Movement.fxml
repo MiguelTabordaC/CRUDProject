@@ -13,48 +13,61 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="576.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="proyectoCRUD.ui.MovementController">
        <children>
-          <TableView fx:id="tbMovement" layoutX="79.0" layoutY="144.0" prefHeight="317.0" prefWidth="856.0">
+          <TableView fx:id="tbMovement" layoutX="62.0" layoutY="143.0" prefHeight="318.0" prefWidth="711.0">
             <columns>
-                <TableColumn fx:id="tbColDate" minWidth="0.0" prefWidth="245.0" text="DATE" />
-              <TableColumn fx:id="tbColAmount" prefWidth="210.0" text="AMOUNT" />
-                <TableColumn fx:id="tbColType" prefWidth="165.0" text="TYPE" />
-              <TableColumn fx:id="tbColBalance" prefWidth="235.0" text="BALANCE" />
+                <TableColumn fx:id="tbColDate" minWidth="0.0" prefWidth="232.0" text="DATE" />
+              <TableColumn fx:id="tbColAmount" prefWidth="188.0" text="AMOUNT" />
+                <TableColumn fx:id="tbColType" prefWidth="148.0" text="TYPE" />
+              <TableColumn fx:id="tbColBalance" prefWidth="150.0" text="BALANCE" />
             </columns>
           </TableView>
-          <Button fx:id="btNewMovement" layoutX="79.0" layoutY="486.0" mnemonicParsing="false" prefHeight="47.0" prefWidth="154.0" text="New movement">
+          <Button fx:id="btNewMovement" layoutX="794.0" layoutY="503.0" mnemonicParsing="false" prefHeight="47.0" prefWidth="169.0" text="New movement">
              <font>
                 <Font size="15.0" />
              </font></Button>
-          <Label layoutX="85.0" layoutY="73.0" prefHeight="25.0" prefWidth="75.0" text="Account:" wrapText="true">
+          <Label layoutX="68.0" layoutY="72.0" prefHeight="25.0" prefWidth="75.0" text="Account:" wrapText="true">
              <font>
                 <Font size="15.0" />
              </font></Label>
-          <Button fx:id="btUndo" layoutX="280.0" layoutY="486.0" mnemonicParsing="false" prefHeight="47.0" prefWidth="154.0" text="Undo movement">
+          <Button fx:id="btUndo" layoutX="794.0" layoutY="414.0" mnemonicParsing="false" prefHeight="47.0" prefWidth="169.0" text="Undo last movement">
              <font>
-                <Font size="15.0" />
+                <Font size="14.0" />
              </font>
           </Button>
-          <Button fx:id="btCancel" layoutX="818.0" layoutY="486.0" mnemonicParsing="false" prefHeight="47.0" prefWidth="118.0" text="Cancel">
+          <Button fx:id="btCancel" layoutX="794.0" layoutY="143.0" mnemonicParsing="false" prefHeight="47.0" prefWidth="169.0" text="Cancel">
              <font>
                 <Font size="15.0" />
              </font></Button>
-          <Line endX="755.0" layoutX="180.0" layoutY="112.0" startX="-100.0" />
-          <SplitMenuButton fx:id="selectAccount" layoutX="160.0" layoutY="73.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="274.0">
+          <Line endX="797.0" layoutX="163.0" layoutY="111.0" startX="-100.0" />
+          <SplitMenuButton fx:id="selectType" layoutX="62.0" layoutY="510.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="275.0">
             <items>
-              <MenuItem mnemonicParsing="false" text="Action 1" />
-              <MenuItem mnemonicParsing="false" text="Action 2" />
+              <MenuItem fx:id="mIDeposit" mnemonicParsing="false" text="Deposit" />
+              <MenuItem fx:id="mIPayment" mnemonicParsing="false" text="Payment" />
             </items>
+         <font>
+            <Font size="16.0" />
+         </font>
           </SplitMenuButton>
-          <HBox layoutX="539.0" layoutY="73.0" prefHeight="25.0" prefWidth="397.0">
-             <children>
-                <Label prefHeight="26.0" prefWidth="110.0" text="Filter by date:">
-                   <font>
-                      <Font size="15.0" />
-                   </font>
-                </Label>
-                <DatePicker fx:id="datePickDesde" prefHeight="25.0" prefWidth="139.0" promptText="From" />
-            <DatePicker fx:id="datePickHasta" prefHeight="25.0" prefWidth="139.0" promptText="To" />
-             </children>
-          </HBox>
+          <HBox layoutX="522.0" layoutY="72.0" prefHeight="25.0" prefWidth="397.0" />
+      <Label fx:id="lbIdAcount" layoutX="143.0" layoutY="72.0" prefHeight="25.0" prefWidth="184.0">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <Label layoutX="63.0" layoutY="476.0" text="Type:">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <Label layoutX="426.0" layoutY="476.0" text="Amount:">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <TextField fx:id="tfAmount" layoutX="426.0" layoutY="510.0" prefHeight="25.0" prefWidth="275.0">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </TextField>
        </children>
     </Pane>
