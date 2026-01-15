@@ -8,7 +8,7 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1366.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="proyectoCRUD.ui.CrudCustomerController">
    <children>
-      <Label layoutX="79.0" layoutY="116.0" prefHeight="19.0" prefWidth="202.0" text="Customers administration">
+      <Label layoutX="275.0" layoutY="87.0" prefHeight="19.0" prefWidth="202.0" text="Customers administration">
          <font>
             <Font size="15.0" />
          </font>
@@ -28,11 +28,21 @@
             <TableColumn fx:id="tbPassw" prefWidth="134.0" text="Password" />
         </columns>
       </TableView>
-      <Button layoutX="8.0" layoutY="714.0" mnemonicParsing="false" prefHeight="19.0" prefWidth="17.0" text="+">
+      <Button fx:id="bAdd" layoutX="50.0" layoutY="126.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="136.0" text="Add new customer">
          <font>
-            <Font size="16.0" />
+            <Font size="12.0" />
          </font></Button>
       <Button fx:id="bExit" layoutX="1288.0" layoutY="717.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="69.0" style="-fx-background-color: red; -fx-font-weight: bold;" text="Exit" />
-      <Line endX="1125.0" layoutX="149.0" layoutY="150.0" startX="-100.0" />
+      <Line endX="1125.0" layoutX="150.0" layoutY="114.0" startX="-100.0" />
+      <Button fx:id="bDelete" layoutX="213.0" layoutY="126.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="136.0" text="Delete customer">
+         <font>
+            <Font size="12.0" />
+         </font>
+      </Button>
+      <Button fx:id="bRefresh" layoutX="376.0" layoutY="126.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="120.0" text="Refresh page">
+         <font>
+            <Font size="12.0" />
+         </font>
+      </Button>
    </children>
 </Pane>

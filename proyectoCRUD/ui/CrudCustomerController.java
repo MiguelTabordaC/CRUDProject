@@ -8,6 +8,7 @@ package proyectoCRUD.ui;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -57,12 +58,18 @@ public class CrudCustomerController {
     @FXML
     private TableView tbCustomers;
     @FXML
+    private Button bAdd;
+    @FXML
     private Button bExit;
+    @FXML
+    private Button bDelete;
+    @FXML
+    private Button bRefresh;
     
     private final Stage CustomerStage = new Stage();
     private Scene scene;
     
-    CustomerRESTClient clientManager = new CustomerRESTClient();
+    private final CustomerRESTClient clientManager = new CustomerRESTClient();
     
     private static final Logger LOGGER=Logger.getLogger("projectinterfaces.ui");
     
@@ -70,16 +77,20 @@ public class CrudCustomerController {
         
         LOGGER.info("Initializing window");
         
-        scene = new Scene(root);
+        scene = new Scene(root); 
         CustomerStage.setScene(scene);
-
         CustomerStage.setTitle("Customers administration");
-        
         CustomerStage.setResizable(false);
-        
         CustomerStage.show();
+        
+        bDelete.setDisable(true);
+        
         bExit.setOnAction(this::handleBtExitOnAction);
+        bDelete.setOnAction(this::handleBtDeleteOnAction);
+        bRefresh.setOnAction(this::handleBtRefreshOnAction);
+        
         CustomerStage.setOnCloseRequest(this::handleBtExitOnAction);
+        tbCustomers.getSelectionModel().selectedItemProperty().addListener(this::handleCustomerTableSelectionChanged);
         
         tbID.setCellValueFactory(new PropertyValueFactory<>("id"));
         tbID.setEditable(true);
@@ -116,7 +127,7 @@ public class CrudCustomerController {
     private void handleBtExitOnAction(Event event){
         try{
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
-                          "Are you sure you want to go out?",
+                          "Are you sure you want to exit?",
                            ButtonType.YES, ButtonType.NO);
             alert.setTitle("¡Confirm Exit!");
             alert.showAndWait();
@@ -132,6 +143,47 @@ public class CrudCustomerController {
             
         }
     }
+    
+    private void handleCustomerTableSelectionChanged(ObservableValue observable, Object oldValue, Object newValue){
+        try{
+            if(newValue != null){
+                bDelete.setDisable(false);
+            }
+            else{
+                bDelete.setDisable(true); 
+            }
+        }
+        catch (Exception e){
             
+        }
+    }
+    
+    private void handleBtDeleteOnAction(Event event){
+        try{
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION,"Are you sure you want to delete this Customer?",ButtonType.YES,ButtonType.NO);
+            alert.setTitle("Deletion prompt");
+            alert.showAndWait();
+            if (alert.getResult() == ButtonType.YES) {
+                Customer customer = (Customer) tbCustomers.getSelectionModel().getSelectedItem();
+                clientManager.remove(customer.getId().toString());
+                tbCustomers.getItems().remove(customer);
+                bDelete.setDisable(true);
+            }
+            event.consume();
+            
+        }
+        catch(Exception e){
+            
+        }
+        
+    }
+    private void handleBtRefreshOnAction(Event event){
+        try{
+            tbCustomers.refresh();
+        }
+        catch (Exception e){
+            
+        }
+    }
         
 }
