@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -30,6 +31,7 @@ import proyectoCRUD.logic.AccountRESTClient;
 import proyectoCRUD.model.Account;
 import proyectoCRUD.model.AccountType;
 import proyectoCRUD.model.Customer;
+import proyectoCRUD.model.Movement;
 
 /**
  *
@@ -37,8 +39,6 @@ import proyectoCRUD.model.Customer;
  */
 public class AccountController {
 
-    @FXML
-    private TextField tfEmail;
     @FXML
     private Button btnUpgrade;
     @FXML
@@ -70,6 +70,7 @@ public class AccountController {
     private Stage stage;
     private Customer customer;
     private AccountRESTClient client = new AccountRESTClient();
+    private final Stage AccountStage = new Stage();
     
 
     /**
@@ -89,14 +90,15 @@ public class AccountController {
         Scene scene = new Scene(root);
         //Se establecen las propiedades de la vetana.
         stage.setScene(scene);
+        AccountStage.setScene(scene);
         this.stage = stage;
         //Establecer el titulo de la ventana
-        stage.setTitle("Account");
+        AccountStage.setTitle("Account");
         //La ventana no es redimensionable
         stage.setResizable(false);
-        //El botón Login esta deshabilitado y el botón Exit esta habilitado.
-        //btnLogin.setDisable(true);
-        //btnExit.setDisable(false);
+        AccountStage.setResizable(false);
+        //El botón Delete esta deshabilitado.
+        btnDelete.setDisable(false);
         //Asociar eventos a manejadores
         btnExit.setOnAction(this::handleExitOnAction);
         tcId.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -107,23 +109,72 @@ public class AccountController {
         tcCreditLine.setCellValueFactory(new PropertyValueFactory<>("creditLine"));
         tcBeginBalanceTimestamp.setCellValueFactory(new PropertyValueFactory<>("BeginBalanceTimestamp"));
         //btnMovement.setOnAction(this::handleMovementOnAction);
+        btnDelete.setOnAction(this::handleDelete);
+        btnRefresh.setOnAction(this::handleRefresh);
+        tbvAccounts.getSelectionModel().selectedItemProperty().addListener(this::handleAccountTable);
 
         //Carga de datos en la tabla
-        
-        
         tbvAccounts.setItems(FXCollections.observableArrayList(
-                client.findAccountsByCustomerId_XML(new GenericType<List<Account>>() {}, customer.getId().toString())));
+                client.findAccountsByCustomerId_XML(new GenericType<List<Account>>() {}, 
+                        customer.getId().toString())));
         
         //Mostrar la ventana
         stage.show();
+        AccountStage.show();
         //Cerrar la ventana
         stage.setOnCloseRequest(this::handleExitOnAction);
+        AccountStage.setOnCloseRequest(this::handleExitOnAction);
         
         }catch(Exception e){
-            e.printStackTrace();
             handleAlert("Error al obtener los datos");
         }
         
+    }
+    private void handleRefresh(ActionEvent event){
+        tbvAccounts.refresh();
+        
+        
+    }
+    private void handleAccountTable(ObservableValue observable, Object oldValue, Object newValue){
+       
+            if(newValue != null){
+                btnDelete.setDisable(false);
+            } else{
+                btnDelete.setDisable(true);
+            }
+        
+    }
+    /**
+     * @parama event Manejador del borrado de la cuenta
+     */
+    private void handleDelete(ActionEvent event){
+        try{
+        Account select = tbvAccounts.getSelectionModel().getSelectedItem();
+        
+           
+        if(select.getMovements().equals(null)){
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+                "Are you sure you want to delete?",
+                    ButtonType.OK, ButtonType.CANCEL);
+            
+            alert.setTitle("Confirm Exit!");
+            alert.showAndWait(); 
+            
+            if (alert.getResult() == ButtonType.YES) {
+                
+                client.removeAccount(select.getId().toString());
+                tbvAccounts.getItems().remove(select);
+                btnDelete.setDisable(true);
+            
+            }
+            event.consume();
+        } else{
+            throw new Exception("You cannot delete the account\nbecause it still has movements");
+        }
+        }catch(Exception e){
+            handleAlert(e.getMessage());
+        }
+         
     }
     
     /**
@@ -131,7 +182,7 @@ public class AccountController {
      * @param event Manejador del boton exit
      */
     private void handleExitOnAction(Event event) {
-
+        try {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
                 "Are you sure you want to go out?",
                 ButtonType.YES, ButtonType.NO);
@@ -141,28 +192,27 @@ public class AccountController {
         if (alert.getResult() == ButtonType.YES) {
             //Lanzamos la ventana emergente para pedir confirmación de salida
             Stage stage = (Stage) btnExit.getScene().getWindow();
-            stage.close();
-
-        }
-         try {
-           
+            
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("ProyectSignIn.fxml"));
+                    getClass().getResource("SignIn.fxml"));
             Parent root = loader.load();
             
-           SignInController controller = loader.getController();
+            SignInController controller = loader.getController();
             controller.init(this.stage,root);
-            
-
+            AccountStage.close();
+            }   
         } catch (Exception e) {
             LOGGER.warning(e.getMessage());
-            handleAlert("¡Error, when going to registry!");
+            handleAlert("Error, when going to registry!");
         }
         event.consume();
        
 
     }
-
+    /**
+     * 
+     * @param customer obtenemos el customer
+     */
     public void setCustomer(Customer customer) {
 
         this.customer = customer;
@@ -192,7 +242,7 @@ public class AccountController {
      }*/
     /**
      *
-     * @param mensaje de error
+     * @param mensaje de error en el programa
      */
     private void handleAlert(String mensaje) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
