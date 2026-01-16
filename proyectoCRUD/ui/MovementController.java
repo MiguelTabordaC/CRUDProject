@@ -20,7 +20,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -49,6 +51,16 @@ public class MovementController {
     private Label lbIdAcount;
     @FXML
     private TextField tfAmount;
+    /*@FXML
+    private TableView tbMovement;
+    @FXML
+    private TableColumn tbColDate;
+    @FXML
+    private TableColumn tbColAmount;
+    @FXML
+    private TableColumn tbColType;
+    @FXML
+    private TableColumn tbColBalance;*/
     @FXML
     private TableView<Movement> tbMovement;
     @FXML
@@ -60,7 +72,7 @@ public class MovementController {
     @FXML
     private TableColumn<Movement, String> tbColBalance;
     @FXML
-    private SplitMenuButton selectType;
+    private ComboBox selectType;
     
     private Customer customer;
     private Stage stage;
@@ -81,9 +93,13 @@ public class MovementController {
             btNewMovement.setDisable(false);
             //btUndo.setDisable(true);
             btCancel.setDisable(false);
+            
+            ObservableList<String> type = FXCollections.observableArrayList("Deposit","Paypent");
+            selectType.setItems(type);
 
             tfAmount.focusedProperty().addListener(this::handleAmountOnFocusedChange);
-            
+            selectType.focusedProperty().addListener(this::handleTypeOnFocusedChange);
+                    
             btNewMovement.setOnAction(this::handlebtNewMovementOnAction);
             btUndo.setOnAction(this::handlebtUndoOnAction);
             btCancel.setOnAction(this::handlebtCancelOnAction);
@@ -135,7 +151,14 @@ public class MovementController {
             LOGGER.info(e.getMessage());
         }
     }
-
+    private void handleTypeOnFocusedChange(ObservableValue observable, Boolean oldValue, Boolean newValue){
+        try{
+           
+        }
+        catch(Exception e){
+            LOGGER.info(e.getMessage());
+        }
+    }
     //BOTONES
     /**
      *
@@ -161,29 +184,38 @@ public class MovementController {
 
     private void handlebtUndoOnAction(ActionEvent event) {
         try{
-            tbColDate.
-            Date lastMovement;
-            for (int i = 0; i < tbColDate.size(); i++) {
-                lastMovement = tbColDate.forEach(tbColDate.getCellData());
-                if(tbMovement.getItems().getCellData(i).
+            //tbColDate.
+           // Date lastMovement;
+            //for (int i = 0; i < tbColDate.size(); i++) {
+                //lastMovement = tbColDate.forEach(tbColDate.getCellData());
+               /* if(tbMovement.getItems().getCellData(i).
                         
                         compareTo(lastMovement)){
                     
-                }
+                }*/
             
-            }
+           // }
             tbMovement.getItems().get(tbMovement.getItems().size()-1).getId();
             
             tbMovement.getItems().remove(tbMovement.getItems().size()-1);
             tbMovement.refresh();
-        }
         }
         catch(Exception e){
         }
     }
 
     private void handlebtNewMovementOnAction(ActionEvent event) {
-        try{ 
+        try{
+            Movement movement = new Movement();
+            
+            
+            /*tbMovement.getItems().
+                    add(new Movement(tbColDate.setTimestamp(),
+                    tbColAmount.setAmount(),
+                    tbColType.setDescription(),
+                    tbColBalance.setBalance()));*/
+            tfAmount.getText();
+           // selectType.getText();
             
         }
         catch(Exception e){
