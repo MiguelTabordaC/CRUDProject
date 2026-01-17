@@ -24,6 +24,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javax.ws.rs.core.GenericType;
@@ -33,22 +34,16 @@ import proyectoCRUD.model.AccountType;
 import proyectoCRUD.model.Customer;
 import proyectoCRUD.model.Movement;
 
-/**
+/** Declaracion de las respectivas variables y las respectivas columnas de la tabla
  *
  * @author luis felipe
  */
 public class AccountController {
 
     @FXML
-    private Button btnUpgrade;
+    private Button btnRefresh, btnDelete ,btnMovement, btnExit;
     @FXML
-    private Button btnRefresh;
-    @FXML
-    private Button btnMovement;
-    @FXML
-    private Button btnDelete;
-    @FXML
-    private Button btnExit;
+    private ToggleButton btnAdd;
     @FXML
     private TableView<Account> tbvAccounts;
     @FXML
@@ -58,11 +53,7 @@ public class AccountController {
     @FXML
     private TableColumn<Account, AccountType> tcType;
     @FXML
-    private TableColumn<Account, Double> tcBeginBalance;
-    @FXML
-    private TableColumn<Account, Double> tcBalance;
-    @FXML
-    private TableColumn<Account, Double> tcCreditLine;
+    private TableColumn<Account, Double> tcBeginBalance, tcBalance, tcCreditLine;
     @FXML
     private TableColumn<Account, Date> tcBeginBalanceTimestamp;
     
@@ -97,27 +88,38 @@ public class AccountController {
         //La ventana no es redimensionable
         stage.setResizable(false);
         AccountStage.setResizable(false);
-        //El botón Delete esta deshabilitado.
-        btnDelete.setDisable(false);
+        //El botón Delete está deshabilitado.
+        btnDelete.setDisable(true);
         //Asociar eventos a manejadores
-        btnExit.setOnAction(this::handleExitOnAction);
         tcId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        tcId.setEditable(false);
         tcDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
+        tcDescription.setEditable(true);
         tcType.setCellValueFactory(new PropertyValueFactory<>("type"));
+        tcType.setEditable(true);
         tcBeginBalance.setCellValueFactory(new PropertyValueFactory<>("beginBalance"));
+        tcBeginBalance.setEditable(true);
         tcBalance.setCellValueFactory(new PropertyValueFactory<>("balance"));
+        tcBalance.setEditable(false);
         tcCreditLine.setCellValueFactory(new PropertyValueFactory<>("creditLine"));
+        tcCreditLine.setEditable(false);
         tcBeginBalanceTimestamp.setCellValueFactory(new PropertyValueFactory<>("BeginBalanceTimestamp"));
+        tcBeginBalanceTimestamp.setEditable(false);
+        //Manejadores de los botones
         //btnMovement.setOnAction(this::handleMovementOnAction);
         btnDelete.setOnAction(this::handleDelete);
         btnRefresh.setOnAction(this::handleRefresh);
         tbvAccounts.getSelectionModel().selectedItemProperty().addListener(this::handleAccountTable);
-
+        btnAdd.setOnAction(this::handleCreate);
+        btnExit.setOnAction(this::handleExitOnAction);
+        //EditOnCommit
+        /*tcDescription.setOnEditCommit(this::handleDescription);
+        tcType.setOnEditCommit(this::handleType);
+        tcBeginBalance.setOnEditCommit(this::handleBeginBalnce);*/
         //Carga de datos en la tabla
         tbvAccounts.setItems(FXCollections.observableArrayList(
                 client.findAccountsByCustomerId_XML(new GenericType<List<Account>>() {}, 
                         customer.getId().toString())));
-        
         //Mostrar la ventana
         stage.show();
         AccountStage.show();
@@ -130,12 +132,25 @@ public class AccountController {
         }
         
     }
-    private void handleRefresh(ActionEvent event){
-        tbvAccounts.refresh();
-        
+    /*private void handleDescription(){
         
     }
-    private void handleAccountTable(ObservableValue observable, Object oldValue, Object newValue){
+    private void handleType(){
+        Account accounts = 
+        if (accounts == tcCreditLine){
+            tcCreditLine.setOnEditCommit(true);
+        }
+    }
+    private void handleBeginBalnce(){
+        
+    }*/
+    /**
+     * 
+     * @param observable
+     * @param oldValue
+     * @param newValue 
+     */
+      private void handleAccountTable(ObservableValue observable, Object oldValue, Object newValue){
        
             if(newValue != null){
                 btnDelete.setDisable(false);
@@ -144,6 +159,52 @@ public class AccountController {
             }
         
     }
+      /**
+       * 
+       * @param event Button Create se queda pulsado hasta no terminar de crear
+       */
+    private void handleCreate(ActionEvent event){
+        if(btnAdd.isSelected()){
+           
+            createMode();
+        }else{
+            exitMode();
+        }
+       
+        
+    }
+    /**
+     * Creacion de la accion cuando se pulsa el boton Add
+     */
+    private void createMode() {
+        
+    }
+    /**
+     * Accion consecuente al pulsar nuevamente create para finalizar de crear una nueva cuenta
+     */
+    private void exitMode(){
+        
+    }
+    /**
+     * 
+     * @param event accion de refrescar la tabla
+     */
+    private void handleRefresh(ActionEvent event){
+        
+       try{
+        
+        tbvAccounts.setItems(FXCollections.observableArrayList(
+                client.findAccountsByCustomerId_XML(new GenericType<List<Account>>() {}, 
+                        customer.getId().toString())));
+        Alert alert = new Alert(Alert.AlertType.INFORMATION,
+                        "The table has been refreshed",ButtonType.OK);
+                        alert.setTitle("Information!");
+                        alert.showAndWait();
+       }catch(Exception e){
+           handleAlert("Error, when refresh table!");
+       }
+    }
+  
     /**
      * @parama event Manejador del borrado de la cuenta
      */
@@ -152,7 +213,7 @@ public class AccountController {
         Account select = tbvAccounts.getSelectionModel().getSelectedItem();
         
            
-        if(select.getMovements().equals(null)){
+    if (select.getMovements() == null || select.getMovements().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
                 "Are you sure you want to delete?",
                     ButtonType.OK, ButtonType.CANCEL);
@@ -160,7 +221,7 @@ public class AccountController {
             alert.setTitle("Confirm Exit!");
             alert.showAndWait(); 
             
-            if (alert.getResult() == ButtonType.YES) {
+            if (alert.getResult() == ButtonType.OK) {
                 
                 client.removeAccount(select.getId().toString());
                 tbvAccounts.getItems().remove(select);
@@ -176,6 +237,27 @@ public class AccountController {
         }
          
     }
+    /**
+     *
+     * @param event Maneja el cambio de ventana hacia movement
+     */
+
+    /*private void handleMovementOnAction(ActionEvent event){
+         try {
+           
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("Movement.fxml"));
+            Parent root = loader.load();
+            
+           MovementController controller = loader.getController();
+            controller.init(this.stage,root);
+            
+
+        } catch (Exception e) {
+            LOGGER.warning(e.getMessage());
+            handleAlert("¡Error, when going to registry!");
+        }
+     }*/
     
     /**
      *
@@ -219,27 +301,7 @@ public class AccountController {
 
     }
 
-    /**
-     *
-     * @param event Maneja el cambio de ventana, hacia movement
-     */
-
-    /*private void handleMovementOnAction(ActionEvent event){
-         try {
-           
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("Movement.fxml"));
-            Parent root = loader.load();
-            
-           MovementController controller = loader.getController();
-            controller.init(this.stage,root);
-            
-
-        } catch (Exception e) {
-            LOGGER.warning(e.getMessage());
-            handleAlert("¡Error, when going to registry!");
-        }
-     }*/
+    
     /**
      *
      * @param mensaje de error en el programa
@@ -249,4 +311,6 @@ public class AccountController {
         alert.setContentText(mensaje);
         alert.showAndWait();
     }
+
+    
 }

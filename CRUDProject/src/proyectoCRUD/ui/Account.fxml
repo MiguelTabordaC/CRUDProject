@@ -28,10 +28,10 @@
             <TableColumn fx:id="tcBeginBalanceTimestamp" prefWidth="113.0" text="DATE" />
         </columns>
       </TableView>
-      <Button fx:id="btnMovement" layoutX="904.0" layoutY="230.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="95.0" text="Add" />
+      <ToggleButton  fx:id="btnAdd" layoutX="904.0" layoutY="230.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="95.0" text="AddAccount" />
       <Button fx:id="btnRefresh" layoutX="904.0" layoutY="276.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="95.0" text="Refresh" />
       <Button fx:id="btnDelete" layoutX="904.0" layoutY="325.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="95.0" text="Delete" />
-      <Button fx:id="btnUpgrade" layoutX="904.0" layoutY="468.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="95.0" text="Movements" />
+      <Button fx:id="btnMovement" layoutX="904.0" layoutY="468.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="95.0" text="Movements" />
       <Button fx:id="btnExit" layoutX="904.0" layoutY="510.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="95.0" text="EXIT" />
    </children>
 </Pane>
