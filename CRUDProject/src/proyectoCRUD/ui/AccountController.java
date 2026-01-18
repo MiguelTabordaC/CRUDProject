@@ -7,6 +7,7 @@ package proyectoCRUD.ui;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -27,8 +28,11 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
+import javafx.util.converter.DoubleStringConverter;
 import javax.ws.rs.core.GenericType;
 import proyectoCRUD.logic.AccountRESTClient;
 import proyectoCRUD.model.Account;
@@ -109,6 +113,17 @@ public class AccountController {
             tcCreditLine.setEditable(false);
             tcBeginBalanceTimestamp.setCellValueFactory(new PropertyValueFactory<>("BeginBalanceTimestamp"));
             tcBeginBalanceTimestamp.setEditable(false);
+            tcDescription.setCellFactory(TextFieldTableCell.forTableColumn());
+            tcBeginBalance.setCellFactory(
+                    TextFieldTableCell.forTableColumn(new DoubleStringConverter())
+            );
+            tcCreditLine.setCellFactory(
+                    TextFieldTableCell.forTableColumn(new DoubleStringConverter())
+            );
+            tcType.setCellFactory(
+                    ComboBoxTableCell.forTableColumn(AccountType.values())
+            );
+
             //Manejadores de los botones
             //btnMovement.setOnAction(this::handleMovementOnAction);
             btnDelete.setOnAction(this::handleDelete);
@@ -225,12 +240,16 @@ public class AccountController {
      * Creacion de la accion cuando se pulsa el boton Add
      */
     private void createMode() {
-        newAccounts = tbvAccounts.getSelectionModel().getSelectedItem();
-        newAccounts = new Account();
-        newAccounts.setCustomers((Set<Customer>) customer);
+        Account account = new Account();
 
-        tbvAccounts.getItems().add(newAccounts);
-        tbvAccounts.getSelectionModel().select(newAccounts);
+        Set<Customer> customers = new HashSet<>();
+        customers.add(customer);
+        account.setCustomers(customers);
+
+        tbvAccounts.getItems().add(account);
+        tbvAccounts.getSelectionModel().select(account);
+
+        newAccounts = account;
 
     }
 
@@ -239,7 +258,35 @@ public class AccountController {
      * una nueva cuenta
      */
     private void exitMode() {
+        tbvAccounts.setEditable(false);
 
+        if (newAccounts != null && newAccounts.getId() == null) {
+
+            // Validaciones básicas
+            if (newAccounts.getDescription() == null
+                    || newAccounts.getDescription().trim().isEmpty()) {
+                handleAlert("Description is required");
+                btnAdd.setSelected(true);
+                return;
+            }
+
+            if (newAccounts.getType() == AccountType.CREDIT
+                    && newAccounts.getCreditLine() == null) {
+                handleAlert("Credit line is required for credit accounts");
+                btnAdd.setSelected(true);
+                return;
+            }
+
+            try {
+                client.createAccount_XML(newAccounts);
+            } catch (Exception e) {
+                handleAlert("Error creating account");
+                btnAdd.setSelected(true);
+                return;
+            }
+        }
+
+        newAccounts = null;
     }
 
     /**
