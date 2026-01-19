@@ -349,6 +349,7 @@ public class AccountController {
             
            MovementController controller = loader.getController();
             controller.init(this.stage,root);
+            controller.setAccount(account);
             
 
         } catch (Exception e) {
