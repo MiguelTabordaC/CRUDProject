@@ -700,7 +700,7 @@ public class SignUpController {
     private void handleHyperlinkOnAction(ActionEvent event){
         try{
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("ProyectoSignIn.fxml"));
+                    getClass().getResource("SignIn.fxml"));
             Parent root = loader.load();
             
             SignInController controller = loader.getController();

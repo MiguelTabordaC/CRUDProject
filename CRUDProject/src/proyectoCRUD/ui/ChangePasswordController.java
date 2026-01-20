@@ -253,7 +253,7 @@ public class ChangePasswordController {
     private void handlebtExitOnAction(ActionEvent event){
         try{
             new Alert(AlertType.INFORMATION,"Are you sure you want to leave?").showAndWait();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("ProyectoSignIn.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("SignIn.fxml"));
             Parent root = (Parent)loader.load();
             SignInController controller = loader.getController();
             controller.init(this.stage, root);

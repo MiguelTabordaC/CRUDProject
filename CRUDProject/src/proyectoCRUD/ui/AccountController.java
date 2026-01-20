@@ -5,7 +5,6 @@
  */
 package proyectoCRUD.ui;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -14,7 +13,6 @@ import java.util.Set;
 import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -26,7 +24,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -38,7 +35,6 @@ import proyectoCRUD.logic.AccountRESTClient;
 import proyectoCRUD.model.Account;
 import proyectoCRUD.model.AccountType;
 import proyectoCRUD.model.Customer;
-import proyectoCRUD.model.Movement;
 
 /**
  * Declaracion de las respectivas variables y las respectivas columnas de la
@@ -65,7 +61,7 @@ public class AccountController {
     @FXML
     private TableColumn<Account, Date> tcBeginBalanceTimestamp;
 
-    private static final Logger LOGGER = Logger.getLogger("projectinterfaces.ui");
+    private static final Logger LOGGER = Logger.getLogger("proyectoCRUD.ui");
     private Stage stage;
     private Customer customer;
     private AccountRESTClient client = new AccountRESTClient();
@@ -113,6 +109,8 @@ public class AccountController {
             tcCreditLine.setEditable(false);
             tcBeginBalanceTimestamp.setCellValueFactory(new PropertyValueFactory<>("BeginBalanceTimestamp"));
             tcBeginBalanceTimestamp.setEditable(false);
+
+            //Declaración de las CellFactory
             tcDescription.setCellFactory(TextFieldTableCell.forTableColumn());
             tcBeginBalance.setCellFactory(
                     TextFieldTableCell.forTableColumn(new DoubleStringConverter())
@@ -123,7 +121,13 @@ public class AccountController {
             tcType.setCellFactory(
                     ComboBoxTableCell.forTableColumn(AccountType.values())
             );
-
+            
+            //Declaración de los EditOnCommit
+            tcDescription.setOnEditCommit(this::handleDescription);
+            tcType.setOnEditCommit(this::handleType);
+            tcBeginBalance.setOnEditCommit(this::handleBeginBalance);
+            tcCreditLine.setOnEditCommit(this::handleCreditLine);
+            
             //Manejadores de los botones
             //btnMovement.setOnAction(this::handleMovementOnAction);
             btnDelete.setOnAction(this::handleDelete);
@@ -131,11 +135,7 @@ public class AccountController {
             tbvAccounts.getSelectionModel().selectedItemProperty().addListener(this::handleAccountTable);
             btnAdd.setOnAction(this::handleCreate);
             btnExit.setOnAction(this::handleExitOnAction);
-            //EditOnCommit
-            tcDescription.setOnEditCommit(this::handleDescription);
-            tcType.setOnEditCommit(this::handleType);
-            tcBeginBalance.setOnEditCommit(this::handleBeginBalnce);
-            tcCreditLine.setOnEditCommit(this::handleCreditLine);
+
             //Carga de datos en la tabla
             tbvAccounts.setItems(FXCollections.observableArrayList(
                     client.findAccountsByCustomerId_XML(new GenericType<List<Account>>() {
@@ -153,14 +153,25 @@ public class AccountController {
         }
 
     }
-
+     /**
+     *
+     * @param customer obtenemos el customer
+     */
+    public void setCustomer(Customer customer) {this.customer = customer;}
+    /**
+     * 
+     * @param event 
+     */
     private void handleDescription(TableColumn.CellEditEvent<Account, String> event) {
         newAccounts = event.getRowValue();
         String newValue = event.getNewValue();
         newAccounts.setDescription(newValue);
 
     }
-
+    /**
+     * 
+     * @param event 
+     */
     private void handleType(TableColumn.CellEditEvent<Account, AccountType> event) {
         newAccounts = event.getRowValue();
         AccountType newType = event.getNewValue();
@@ -177,7 +188,10 @@ public class AccountController {
         tbvAccounts.refresh();
 
     }
-
+    /**
+     * 
+     * @param event 
+     */
     private void handleCreditLine(TableColumn.CellEditEvent<Account, Double> event) {
         newAccounts = event.getRowValue();
         Double newValue = event.getNewValue();
@@ -192,11 +206,22 @@ public class AccountController {
 
         newAccounts.setCreditLine(newValue);
     }
-
-    private void handleBeginBalnce(TableColumn.CellEditEvent<Account, Double> event) {
+    /**
+     * 
+     * @param event 
+     */
+    private void handleBeginBalance(TableColumn.CellEditEvent<Account, Double> event) {
         Account account = event.getRowValue();
         Double newValue = event.getNewValue();
 
+        if (newValue == null || newValue < 0) {
+            handleAlert("Begin balance cannot be negative");
+            tbvAccounts.refresh();
+            return;
+        }
+
+        account.setBeginBalance(newValue);
+        account.setBalance(newValue);
     }
 
     /**
@@ -209,10 +234,7 @@ public class AccountController {
 
         if (newValue != null) {
             btnDelete.setDisable(false);
-        } else {
-            btnDelete.setDisable(true);
-        }
-
+        } else {btnDelete.setDisable(true);}
     }
 
     /**
@@ -226,12 +248,12 @@ public class AccountController {
             btnRefresh.setDisable(true);
             btnMovement.setDisable(true);
             tbvAccounts.setEditable(true);
-            createMode();
+            createNewAccount();
         } else {
             btnDelete.setDisable(false);
             btnRefresh.setDisable(false);
             btnMovement.setDisable(false);
-            exitMode();
+            exitNewAccount();
         }
 
     }
@@ -239,44 +261,41 @@ public class AccountController {
     /**
      * Creacion de la accion cuando se pulsa el boton Add
      */
-    private void createMode() {
+    private void createNewAccount() {
+        
         Account account = new Account();
-
         Set<Customer> customers = new HashSet<>();
         customers.add(customer);
         account.setCustomers(customers);
-
         tbvAccounts.getItems().add(account);
         tbvAccounts.getSelectionModel().select(account);
-
+        account.setBeginBalanceTimestamp(new Date());
+        account.setType(AccountType.STANDARD);
+        account.setBalance(0.0);
+        account.setCreditLine(0.0);
         newAccounts = account;
-
     }
 
     /**
      * Accion consecuente al pulsar nuevamente create para finalizar de crear
      * una nueva cuenta
      */
-    private void exitMode() {
+    private void exitNewAccount() {
+        
         tbvAccounts.setEditable(false);
-
         if (newAccounts != null && newAccounts.getId() == null) {
-
-            // Validaciones básicas
             if (newAccounts.getDescription() == null
                     || newAccounts.getDescription().trim().isEmpty()) {
                 handleAlert("Description is required");
                 btnAdd.setSelected(true);
                 return;
             }
-
             if (newAccounts.getType() == AccountType.CREDIT
                     && newAccounts.getCreditLine() == null) {
                 handleAlert("Credit line is required for credit accounts");
                 btnAdd.setSelected(true);
                 return;
             }
-
             try {
                 client.createAccount_XML(newAccounts);
             } catch (Exception e) {
@@ -285,7 +304,6 @@ public class AccountController {
                 return;
             }
         }
-
         newAccounts = null;
     }
 
@@ -296,14 +314,10 @@ public class AccountController {
     private void handleRefresh(ActionEvent event) {
 
         try {
-
             tbvAccounts.setItems(FXCollections.observableArrayList(
                     client.findAccountsByCustomerId_XML(new GenericType<List<Account>>() {
-                    },
-                            customer.getId().toString())));
-            if (handleConfirm("The table has been refreshed")) {
-
-            }
+                    },customer.getId().toString())));
+            if (handleConfirm("The table has been refreshed")) {}
 
         } catch (Exception e) {
             handleAlert("Error, when refresh table!");
@@ -314,9 +328,9 @@ public class AccountController {
      * @parama event Manejador del borrado de la cuenta
      */
     private void handleDelete(ActionEvent event) {
+        
         try {
             Account select = tbvAccounts.getSelectionModel().getSelectedItem();
-
             if (select.getMovements() == null || select.getMovements().isEmpty()) {
 
                 if (handleConfirm("Are you sure you want to delete this account?")) {
@@ -381,19 +395,7 @@ public class AccountController {
             handleAlert("Error, when going to registry!");
         }
         event.consume();
-
     }
-
-    /**
-     *
-     * @param customer obtenemos el customer
-     */
-    public void setCustomer(Customer customer) {
-
-        this.customer = customer;
-
-    }
-
     /**
      *
      * @param mensaje de error en el programa
@@ -403,7 +405,11 @@ public class AccountController {
         alert.setContentText(mensaje);
         alert.showAndWait();
     }
-
+    /**
+     * 
+     * @param mensaje para confirmar la salida
+     * @return Devuelve un mensaje de confirmacion
+     */
     private boolean handleConfirm(String mensaje) {
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
