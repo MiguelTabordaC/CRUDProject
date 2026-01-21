@@ -11,6 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import proyectoCRUD.ui.ChangePasswordController;
+import proyectoCRUD.ui.MovementController;
 import proyectoCRUD.ui.ProjectInterfacesController;
 
 /**
@@ -21,16 +22,10 @@ public class ChangePasswordAplication extends Application {
               
     @Override
     public void start(Stage stage) throws Exception {
-         
-        /*FXMLLoader loader = new FXMLLoader(getClass().getResource("ui/ProyectoSignIn.fxml"));
-        Parent root = (Parent)loader.load();
-        ProjectInterfacesController controller = loader.getController();
         
-        controller.init(stage, root);*/
-        
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("ui/ChangePassword.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("ui/Movement.fxml"));
         Parent root = (Parent)loader.load();
-        ChangePasswordController controller = loader.getController();
+        MovementController controller = loader.getController();
         controller.init(stage, root);
         stage.show();
     }

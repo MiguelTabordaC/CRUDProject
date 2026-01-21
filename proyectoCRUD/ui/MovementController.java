@@ -6,6 +6,8 @@
 package proyectoCRUD.ui;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
@@ -22,8 +24,6 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -32,6 +32,7 @@ import javafx.stage.Stage;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.core.GenericType;
 import proyectoCRUD.logic.MovementRESTClient;
+import proyectoCRUD.model.Account;
 import proyectoCRUD.model.Customer;
 import proyectoCRUD.model.Movement;
 
@@ -74,11 +75,17 @@ public class MovementController {
     @FXML
     private ComboBox selectType;
     
+    private Double balance;
     private Customer customer;
+    private Account account;
     private Stage stage;
+    
     private static final Logger LOGGER = Logger.getLogger("ProjectInterfacesApplication.ui");
-
+    
     MovementRESTClient restClient = new MovementRESTClient();
+    
+    long accountId = 2654785441L;
+    String id = String.valueOf(accountId);
 
     public void init(Stage stage, Parent root) {
         try {
@@ -110,11 +117,12 @@ public class MovementController {
             tbColBalance.setCellValueFactory(new PropertyValueFactory<>("balance"));
             tbMovement.getSelectionModel().selectedItemProperty().addListener(this::handleMovementTableSelectionChanged);
 
-            long accountId = 2654785441L;
-            String id = String.valueOf(accountId);
+           // long accountId = 2654785441L;
+           // String id = String.valueOf(accountId);
 
             ObservableList<Movement> movements = FXCollections.observableArrayList(restClient.findMovementByAccount_XML(
                     new GenericType<List<Movement>>() {},id));
+            
             lbIdAcount.setText(id);
             tbMovement.setItems(movements);
             LOGGER.info(movements.toString());
@@ -128,7 +136,14 @@ public class MovementController {
         stage.show();
 
     }
-
+    public Double getBalance(Long id){
+        
+        return this.balance;
+    }
+    public void setAccount(Account account){
+        this.account = account;
+    }
+    
     public void setCustomer(Customer customer) {
         this.customer = customer;
     }
@@ -138,6 +153,7 @@ public class MovementController {
             
         }
         catch(Exception e){
+            LOGGER.info(e.getMessage());
         }
     }
     private void handleAmountOnFocusedChange(ObservableValue observable, Boolean oldValue, Boolean newValue){
@@ -146,7 +162,6 @@ public class MovementController {
             
             }
         }
-        //Catches the error and writes it in a label
         catch (Exception e){
             LOGGER.info(e.getMessage());
         }
@@ -184,41 +199,59 @@ public class MovementController {
 
     private void handlebtUndoOnAction(ActionEvent event) {
         try{
-            //tbColDate.
-           // Date lastMovement;
-            //for (int i = 0; i < tbColDate.size(); i++) {
-                //lastMovement = tbColDate.forEach(tbColDate.getCellData());
-               /* if(tbMovement.getItems().getCellData(i).
-                        
-                        compareTo(lastMovement)){
-                    
-                }*/
+            /*tbMovement.getItems().sort(tbMovement, (o1, Date o2 -> o1.getTimestamp().compareTo(o2.getTimestamp()));
             
-           // }
-            tbMovement.getItems().get(tbMovement.getItems().size()-1).getId();
+            FXCollections.sort(tbMovement);*/
             
-            tbMovement.getItems().remove(tbMovement.getItems().size()-1);
+            Date lastMovement = Collections.max(tbMovement.getItems(), new Comparator <Movement>(){
+                @Override
+                public int compare(Movement m1, Movement m2){
+                    return m1.getTimestamp().compareTo(m2.getTimestamp());
+                    }
+            }).getTimestamp();
+            
+            //tbMovement.getItems().get(tbMovement.getItems().size()-1).getId();
+            
+            tbMovement.getItems().remove(lastMovement);
+            
             tbMovement.refresh();
+            
         }
         catch(Exception e){
+            LOGGER.info(e.getMessage());
         }
     }
 
     private void handlebtNewMovementOnAction(ActionEvent event) {
         try{
             Movement movement = new Movement();
+            String tipo = (String) selectType.getValue();
+            String amountS = tfAmount.getText();
+            
+            double amount = Double.parseDouble(amountS);
+            
+            movement.setAmount(amount);
+            
+            double balance = getBalance(accountId);
+            double newBalance;
             
             
-            /*tbMovement.getItems().
-                    add(new Movement(tbColDate.setTimestamp(),
-                    tbColAmount.setAmount(),
-                    tbColType.setDescription(),
-                    tbColBalance.setBalance()));*/
-            tfAmount.getText();
+            movement.setDescription(tipo);
+            if(tipo.equals("Deposit")){
+                //balance + amount;
+            }
+            if(tipo.equals("Payment")){
+               // balance - amount;
+            }
+            tbMovement.getItems().add(movement);
+            tbMovement.refresh();
+            
+            LOGGER.info(movement.toString());
            // selectType.getText();
             
         }
         catch(Exception e){
+            LOGGER.info(e.getMessage());
         } //tbMovement.getItems().add(new Movement(tbColDate.getTimestamp(),tbColAmount.getAmount()));
 
     }
