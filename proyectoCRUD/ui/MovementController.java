@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
@@ -89,19 +90,23 @@ public class MovementController {
 
     public void init(Stage stage, Parent root) {
         try {
+            this.account = new Account();
+            this.account.setId(accountId);
+            this.account.setBalance(2000.00);
+            
             this.stage = stage;
             Scene scene = new Scene(root);
             stage.setScene(scene);
 
             stage.setTitle("Movements");
             stage.setResizable(false);
-
+                
             //stage.setOnCloseRequest();
             btNewMovement.setDisable(false);
             //btUndo.setDisable(true);
             btCancel.setDisable(false);
             
-            ObservableList<String> type = FXCollections.observableArrayList("Deposit","Paypent");
+            ObservableList<String> type = FXCollections.observableArrayList("Deposit","Payment");
             selectType.setItems(type);
 
             tfAmount.focusedProperty().addListener(this::handleAmountOnFocusedChange);
@@ -199,55 +204,76 @@ public class MovementController {
 
     private void handlebtUndoOnAction(ActionEvent event) {
         try{
-            /*tbMovement.getItems().sort(tbMovement, (o1, Date o2 -> o1.getTimestamp().compareTo(o2.getTimestamp()));
-            
-            FXCollections.sort(tbMovement);*/
-            
-            Date lastMovement = Collections.max(tbMovement.getItems(), new Comparator <Movement>(){
-                @Override
-                public int compare(Movement m1, Movement m2){
-                    return m1.getTimestamp().compareTo(m2.getTimestamp());
-                    }
-            }).getTimestamp();
-            
-            //tbMovement.getItems().get(tbMovement.getItems().size()-1).getId();
-            
-            tbMovement.getItems().remove(lastMovement);
-            
+            Movement lastMovement = tbMovement.getItems().stream()
+                    .max(Comparator.comparing(Movement::getTimestamp)).orElse(null);
+
+            if (lastMovement != null) {
+                tbMovement.getItems().remove(lastMovement);
+            }
             tbMovement.refresh();
-            
+            restClient.remove(id);
         }
         catch(Exception e){
             LOGGER.info(e.getMessage());
         }
     }
+   /* private void handlebtUndoOnAction(ActionEvent event) {
+        try {
+
+            if (tbMovement.getItems().isEmpty()) {
+                return;
+            }
+
+            Movement lastMovement = Collections.max(
+                tbMovement.getItems(),
+                new Comparator<Movement>() {
+                    @Override
+                    public int compare(Movement m1, Movement m2) {
+                        return m1.getTimestamp().compareTo(m2.getTimestamp());
+                    }
+                }
+            );
+
+            tbMovement.getItems().remove(lastMovement);
+
+        } catch (Exception e) {
+            LOGGER.info(e.getMessage());
+        }
+    }*/
 
     private void handlebtNewMovementOnAction(ActionEvent event) {
         try{
+            
             Movement movement = new Movement();
             String tipo = (String) selectType.getValue();
-            String amountS = tfAmount.getText();
             
-            double amount = Double.parseDouble(amountS);
-            
-            movement.setAmount(amount);
-            
-            double balance = getBalance(accountId);
+            double amount = Double.valueOf(tfAmount.getText());
+            double balance = account.getBalance();
             double newBalance;
-            
-            
+
+            movement.setAmount(amount);
+             
             movement.setDescription(tipo);
+            
+            Date timestamp= new Date();
+            movement.setTimestamp(timestamp);
+            
             if(tipo.equals("Deposit")){
-                //balance + amount;
+                newBalance = balance + amount;
+                movement.setBalance(newBalance);
+                this.account.setBalance(newBalance); 
             }
             if(tipo.equals("Payment")){
-               // balance - amount;
+                newBalance = balance - amount;
+                movement.setBalance(newBalance);
+                this.account.setBalance(newBalance);
             }
+            
             tbMovement.getItems().add(movement);
             tbMovement.refresh();
             
+            restClient.create_XML(movement, id);
             LOGGER.info(movement.toString());
-           // selectType.getText();
             
         }
         catch(Exception e){
