@@ -89,13 +89,7 @@ public class CrudCustomerController {
         
         bDelete.setDisable(true);
         
-        GenericType<List<Customer>> customers = new GenericType<List<Customer>>() {};
-        
-        List<Customer> customerList = clientManager.findAll_XML(customers);
-
-        ObservableList<Customer> allCustomers = FXCollections.observableArrayList(customerList);
-        
-        tbCustomers.setItems(allCustomers);
+        reloadTable();
         
         tbCustomers.setEditable(true);
         
@@ -455,7 +449,7 @@ public class CrudCustomerController {
     }
     private void handleBtRefreshOnAction(Event event){
         try{
-            tbCustomers.refresh();
+            reloadTable();
         }
         catch (Exception e){
             LOGGER.info(e.getMessage());
@@ -464,15 +458,30 @@ public class CrudCustomerController {
     
     private void handleBtAddOnAction(Event event){
         try{
-            /*
             Customer customer = new Customer();
             clientManager.create_XML(customer);
-            tbCustomers.getItems().add(customer);
-            */
+            tbCustomers.getItems().add(0, customer);
+            reloadTable();
+            tbCustomers.requestFocus();
+            tbCustomers.getSelectionModel().select(0);
+
+
+            
         }
         catch(Exception e){
             LOGGER.info(e.getMessage());
         }
+    }
+    
+    private void reloadTable(){
+        
+        GenericType<List<Customer>> customers = new GenericType<List<Customer>>() {};
+        
+        List<Customer> customerList = clientManager.findAll_XML(customers);
+
+        ObservableList<Customer> allCustomers = FXCollections.observableArrayList(customerList);
+        
+        tbCustomers.setItems(allCustomers);
     }
         
 }
