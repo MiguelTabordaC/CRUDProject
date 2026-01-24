@@ -96,6 +96,8 @@ public class AccountController {
             AccountStage.setResizable(false);
             //El botón Delete está deshabilitado.
             btnDelete.setDisable(true);
+            //El botón Movements está deshabilitado hasta seleccionar una cuenta
+            btnMovement.setDisable(true);
             //Asociar eventos a manejadores
             tcId.setCellValueFactory(
                     new PropertyValueFactory<>("id"));
@@ -116,7 +118,7 @@ public class AccountController {
                     new PropertyValueFactory<>("creditLine"));
             tcCreditLine.setEditable(false);
             tcBeginBalanceTimestamp.setCellValueFactory(
-                    new PropertyValueFactory<>("BeginBalanceTimestamp"));
+                    new PropertyValueFactory<>("beginBalanceTimestamp"));
             tcBeginBalanceTimestamp.setEditable(false);
 
             //Declaración de las CellFactory
@@ -175,7 +177,6 @@ public class AccountController {
     private void handleDescription(TableColumn.CellEditEvent<Account, String> event) {
         Account account = event.getRowValue();
         String newValue = event.getNewValue();
-        account.setDescription(newValue);
         if (newValue == null || newValue.trim().isEmpty()) {
             handleAlert("La descripción no puede estar vacía");
             // Restaurar el valor anterior
@@ -184,6 +185,10 @@ public class AccountController {
             return;
         }
         account.setDescription(newValue);
+        if (account.getId() != null && account != newAccounts) {
+            client.updateAccount_XML(account);
+        }
+
     }
 
     /**
@@ -191,16 +196,19 @@ public class AccountController {
      * @param event
      */
     private void handleType(TableColumn.CellEditEvent<Account, AccountType> event) {
-        newAccounts = event.getRowValue();
+        Account account = event.getRowValue();
         AccountType newType = event.getNewValue();
 
-        newAccounts.setType(newType);
+        account.setType(newType);
 
         if (newType == AccountType.CREDIT) {
             tcCreditLine.setEditable(true);
         } else {
-            newAccounts.setCreditLine(null);
+            account.setCreditLine(null);
             tcCreditLine.setEditable(false);
+        }
+        if (account.getId() != null && account != newAccounts) {
+            client.updateAccount_XML(account);
         }
 
         tbvAccounts.refresh();
@@ -212,19 +220,23 @@ public class AccountController {
      * @param event
      */
     private void handleCreditLine(TableColumn.CellEditEvent<Account, Double> event) {
-        newAccounts = event.getRowValue();
+        Account account = event.getRowValue();
         Double newValue = event.getNewValue();
 
-        if (newAccounts.getType() != AccountType.CREDIT) {
+        if (account.getType() != AccountType.CREDIT) {
             return;
         }
 
         if (newValue == null || newValue < 0) {
-            handleAlert("Begin balance cannot be negative");
+            handleAlert("Credit line cannot be negative");
             return;
         }
 
-        newAccounts.setCreditLine(newValue);
+        account.setCreditLine(newValue);
+        if (account.getId() != null && account != newAccounts) {
+            client.updateAccount_XML(account);
+        }
+
     }
 
     /**
@@ -243,6 +255,10 @@ public class AccountController {
 
         account.setBeginBalance(newValue);
         account.setBalance(newValue);
+        if (account.getId() != null && account != newAccounts) {
+            client.updateAccount_XML(account);
+        }
+
     }
 
     /**
@@ -255,8 +271,11 @@ public class AccountController {
 
         if (newValue != null) {
             btnDelete.setDisable(false);
+            btnMovement.setDisable(false);
         } else {
             btnDelete.setDisable(true);
+            btnMovement.setDisable(true);
+
         }
     }
 
@@ -304,7 +323,8 @@ public class AccountController {
                     .anyMatch(a -> a.getId() != null && a.getId().equals(finalNumero));
 
         } while (existe); //Si existe, se repite el proceso
-
+        
+        //Declaración de valores predeterminados
         account.setId(numero);
         Set<Customer> customers = new HashSet<>();
         customers.add(customer);
@@ -359,9 +379,6 @@ public class AccountController {
             tbvAccounts.setItems(FXCollections.observableArrayList(
                     client.findAccountsByCustomerId_XML(new GenericType<List<Account>>() {
                     }, customer.getId().toString())));
-            if (handleConfirm("The table has been refreshed")) {
-            }
-
         } catch (Exception e) {
             handleAlert("Error, when refresh table!");
         }
@@ -399,16 +416,20 @@ public class AccountController {
 
     /*private void handleMovementOnAction(ActionEvent event){
          try {
-           
+            
+            Account selectAccount = tbvAccounts.getSelectionModel().getSelectedItem();
+
+            if (selectAccount == null) {
+                handleAlert("You must select an account first");
+                return;
+            }
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("Movement.fxml"));
             Parent root = loader.load();
             
            MovementController controller = loader.getController();
             controller.init(this.stage,root);
-            controller.setAccount(account);
-            
-
+            controller.setAccount(selectAccount);
         } catch (Exception e) {
             LOGGER.warning(e.getMessage());
             handleAlert("¡Error, when going to registry!");
