@@ -11,7 +11,9 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="576.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="proyectoCRUD.ui.MovementController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" 
+      minWidth="-Infinity" prefHeight="576.0" prefWidth="1024.0" 
+      xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="proyectoCRUD.ui.MovementController">
        <children>
           <TableView fx:id="tbMovement" layoutX="62.0" layoutY="143.0" prefHeight="403.0" prefWidth="712.0">
             <columns>
@@ -40,7 +42,7 @@
              </font></Button>
           <Line endX="797.0" layoutX="163.0" layoutY="111.0" startX="-100.0" />
           <HBox layoutX="522.0" layoutY="72.0" prefHeight="25.0" prefWidth="397.0" />
-      <Label fx:id="lbIdAcount" layoutX="143.0" layoutY="72.0" prefHeight="25.0" prefWidth="184.0">
+      <Label fx:id="lbIdAcount" layoutX="143.0" layoutY="72.0" prefHeight="25.0" prefWidth="212.0">
          <font>
             <Font size="16.0" />
          </font>
@@ -64,6 +66,16 @@
       <Label fx:id="lbErrorAmount" layoutX="807.0" layoutY="298.0" prefHeight="15.0" prefWidth="169.0" textFill="RED">
          <font>
             <Font size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="lbBalance" layoutX="446.0" layoutY="72.0" prefHeight="25.0" prefWidth="212.0">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <Label layoutX="371.0" layoutY="72.0" prefHeight="25.0" prefWidth="75.0" text="Balance:" wrapText="true">
+         <font>
+            <Font size="15.0" />
          </font>
       </Label>
        </children>

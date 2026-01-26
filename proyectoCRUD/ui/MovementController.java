@@ -52,6 +52,8 @@ public class MovementController {
     @FXML
     private Label lbErrorAmount;
     @FXML
+    private Label lbBalance;
+    @FXML
     private TextField tfAmount;
     
     /*@FXML
@@ -82,12 +84,15 @@ public class MovementController {
     private Account account;
     private Stage stage;
     
-    private static final Logger LOGGER = Logger.getLogger("ProjectInterfacesApplication.ui");
+    
+    private static final Logger LOGGER = Logger.getLogger("ProyectoCRUD.ui");
     
     MovementRESTClient restClient = new MovementRESTClient();
     
     long accountId = 2654785441L;
-    String id = String.valueOf(accountId);
+    String id = String.valueOf(account.getId());
+    
+    
 
     public void init(Stage stage, Parent root) {
         try {
@@ -102,9 +107,9 @@ public class MovementController {
             stage.setTitle("Movements");
             stage.setResizable(false);
                 
-            //stage.setOnCloseRequest();
+            
             btNewMovement.setDisable(false);
-            //btUndo.setDisable(true);
+            
             btCancel.setDisable(false);
             
             ObservableList<String> type = FXCollections.observableArrayList("Deposit","Payment");
@@ -121,13 +126,14 @@ public class MovementController {
             tbColAmount.setCellValueFactory(new PropertyValueFactory<>("amount"));
             tbColType.setCellValueFactory(new PropertyValueFactory<>("description"));
             tbColBalance.setCellValueFactory(new PropertyValueFactory<>("balance"));
-            //tbMovement.getSelectionModel().selectedItemProperty().addListener(this::handleMovementTableSelectionChanged);
+            
 
             ObservableList<Movement> movements = FXCollections.observableArrayList(restClient.findMovementByAccount_XML(
                     new GenericType<List<Movement>>() {},id));
             
                     
             lbIdAcount.setText(id);
+            lbBalance.setText(String.valueOf(account.getBalance()));
             tbMovement.setItems(movements);
             LOGGER.info(movements.toString());
             
@@ -207,15 +213,29 @@ public class MovementController {
         try{
             Movement lastMovement = tbMovement.getItems().stream()
                     .max(Comparator.comparing(Movement::getTimestamp)).orElse(null);
+            
             String rm = String.valueOf(lastMovement.getId());
+            Double lastAmount = lastMovement.getAmount();
+            String tipo = (String) selectType.getValue();
+            
+            lbBalance.setText(String.valueOf(account.getBalance()));
+            
             if (lastMovement != null) {
                 tbMovement.getItems().remove(lastMovement);
                 btUndo.setDisable(true);
-                
+                /*if(tipo.equals("Deposit")){
+                    account.setBalance(balance+lastAmount);
+                    lbBalance.setText(String.valueOf(account.getBalance()));
+                }
+                if(tipo.equals("Payment")){
+                    account.setBalance(balance-lastAmount);
+                    lbBalance.setText(String.valueOf(account.getBalance()));
+                }*/
+               
             }
-            
-            tbMovement.refresh();
             restClient.remove(rm);
+            tbMovement.refresh();
+            
         }
         catch(Exception e){
             LOGGER.info(e.getMessage());
@@ -235,7 +255,7 @@ public class MovementController {
                 lbErrorAmount.setText("You have to select the type");
                 throw new IllegalArgumentException("You have to select the type");
             }*/
-            //lbErrorAmount.setText("");
+            lbErrorAmount.setText("");
             double amount = Double.valueOf(tfAmount.getText());
             double balance = account.getBalance();
             double newBalance;
@@ -249,16 +269,18 @@ public class MovementController {
                 newBalance = balance + amount;
                 movement.setBalance(newBalance);
                 this.account.setBalance(newBalance); 
+                lbBalance.setText(String.valueOf(account.getBalance()));
             }
             if(tipo.equals("Payment")){
                 newBalance = balance - amount;
                 movement.setBalance(newBalance);
                 this.account.setBalance(newBalance);
+                lbBalance.setText(String.valueOf(account.getBalance()));
             }
             
             tbMovement.getItems().add(movement);
             tbMovement.refresh();
-            
+            btUndo.setDisable(false);
             restClient.create_XML(movement, id);
             LOGGER.info(movement.toString());
             
