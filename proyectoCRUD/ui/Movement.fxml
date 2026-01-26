@@ -50,16 +50,21 @@
             <Font size="16.0" />
          </font>
       </Label>
-      <Label layoutX="806.0" layoutY="230.0" text="Amount:">
+      <Label layoutX="807.0" layoutY="224.0" text="Amount:">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <TextField fx:id="tfAmount" layoutX="807.0" layoutY="262.0" prefHeight="32.0" prefWidth="169.0">
+      <TextField fx:id="tfAmount" layoutX="808.0" layoutY="256.0" prefHeight="32.0" prefWidth="169.0">
          <font>
             <Font size="16.0" />
          </font>
       </TextField>
       <ComboBox fx:id="selectType" layoutX="803.0" layoutY="170.0" prefHeight="32.0" prefWidth="169.0" />
+      <Label fx:id="lbErrorAmount" layoutX="807.0" layoutY="298.0" prefHeight="15.0" prefWidth="169.0" textFill="RED">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
        </children>
     </Pane>

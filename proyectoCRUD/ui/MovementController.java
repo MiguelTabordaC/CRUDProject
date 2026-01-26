@@ -6,10 +6,8 @@
 package proyectoCRUD.ui;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
@@ -52,7 +50,10 @@ public class MovementController {
     @FXML
     private Label lbIdAcount;
     @FXML
+    private Label lbErrorAmount;
+    @FXML
     private TextField tfAmount;
+    
     /*@FXML
     private TableView tbMovement;
     @FXML
@@ -120,14 +121,12 @@ public class MovementController {
             tbColAmount.setCellValueFactory(new PropertyValueFactory<>("amount"));
             tbColType.setCellValueFactory(new PropertyValueFactory<>("description"));
             tbColBalance.setCellValueFactory(new PropertyValueFactory<>("balance"));
-            tbMovement.getSelectionModel().selectedItemProperty().addListener(this::handleMovementTableSelectionChanged);
-
-           // long accountId = 2654785441L;
-           // String id = String.valueOf(accountId);
+            //tbMovement.getSelectionModel().selectedItemProperty().addListener(this::handleMovementTableSelectionChanged);
 
             ObservableList<Movement> movements = FXCollections.observableArrayList(restClient.findMovementByAccount_XML(
                     new GenericType<List<Movement>>() {},id));
             
+                    
             lbIdAcount.setText(id);
             tbMovement.setItems(movements);
             LOGGER.info(movements.toString());
@@ -153,18 +152,14 @@ public class MovementController {
         this.customer = customer;
     }
 
-    private void handleMovementTableSelectionChanged(ObservableValue observable, Object odlValue, Object newValue) {
-        try{ 
-            
-        }
-        catch(Exception e){
-            LOGGER.info(e.getMessage());
-        }
-    }
     private void handleAmountOnFocusedChange(ObservableValue observable, Boolean oldValue, Boolean newValue){
         try{
-        if(oldValue){
-            
+            if(oldValue){
+                if(tfAmount.getText().isEmpty()){
+                    lbErrorAmount.setText("The amount is empty");
+                    throw new IllegalArgumentException("The amount is empty");
+                }
+                lbErrorAmount.setText("");
             }
         }
         catch (Exception e){
@@ -173,7 +168,13 @@ public class MovementController {
     }
     private void handleTypeOnFocusedChange(ObservableValue observable, Boolean oldValue, Boolean newValue){
         try{
-           
+            if(oldValue)   {
+                if(!selectType.hasProperties()){
+                    lbErrorAmount.setText("You have to select the type");
+                    throw new IllegalArgumentException("You have to select the type");
+                }
+                lbErrorAmount.setText("");
+            }
         }
         catch(Exception e){
             LOGGER.info(e.getMessage());
@@ -206,55 +207,41 @@ public class MovementController {
         try{
             Movement lastMovement = tbMovement.getItems().stream()
                     .max(Comparator.comparing(Movement::getTimestamp)).orElse(null);
-
+            String rm = String.valueOf(lastMovement.getId());
             if (lastMovement != null) {
                 tbMovement.getItems().remove(lastMovement);
+                btUndo.setDisable(true);
+                
             }
+            
             tbMovement.refresh();
-            restClient.remove(id);
+            restClient.remove(rm);
         }
         catch(Exception e){
             LOGGER.info(e.getMessage());
         }
     }
-   /* private void handlebtUndoOnAction(ActionEvent event) {
-        try {
-
-            if (tbMovement.getItems().isEmpty()) {
-                return;
-            }
-
-            Movement lastMovement = Collections.max(
-                tbMovement.getItems(),
-                new Comparator<Movement>() {
-                    @Override
-                    public int compare(Movement m1, Movement m2) {
-                        return m1.getTimestamp().compareTo(m2.getTimestamp());
-                    }
-                }
-            );
-
-            tbMovement.getItems().remove(lastMovement);
-
-        } catch (Exception e) {
-            LOGGER.info(e.getMessage());
-        }
-    }*/
 
     private void handlebtNewMovementOnAction(ActionEvent event) {
         try{
-            
             Movement movement = new Movement();
             String tipo = (String) selectType.getValue();
             
+            /*if(tfAmount.getText().isEmpty()){
+                lbErrorAmount.setText("The amount is empty");
+                throw new IllegalArgumentException("The amount is empty");
+            }
+            if(!selectType.hasProperties()){
+                lbErrorAmount.setText("You have to select the type");
+                throw new IllegalArgumentException("You have to select the type");
+            }*/
+            //lbErrorAmount.setText("");
             double amount = Double.valueOf(tfAmount.getText());
             double balance = account.getBalance();
             double newBalance;
-
-            movement.setAmount(amount);
-             
-            movement.setDescription(tipo);
             
+            movement.setAmount(amount);
+            movement.setDescription(tipo);
             Date timestamp= new Date();
             movement.setTimestamp(timestamp);
             
@@ -278,7 +265,7 @@ public class MovementController {
         }
         catch(Exception e){
             LOGGER.info(e.getMessage());
-        } //tbMovement.getItems().add(new Movement(tbColDate.getTimestamp(),tbColAmount.getAmount()));
+        }
 
     }
 
