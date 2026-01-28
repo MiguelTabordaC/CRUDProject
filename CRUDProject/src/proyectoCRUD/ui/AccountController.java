@@ -137,7 +137,7 @@ public class AccountController {
             tcCreditLine.setOnEditCommit(this::handleCreditLine);
 
             //Manejadores de los botones
-            //btnMovement.setOnAction(this::handleMovementOnAction);
+            btnMovement.setOnAction(this::handleMovementOnAction);
             btnDelete.setOnAction(this::handleDelete);
             btnRefresh.setOnAction(this::handleRefresh);
             tbvAccounts.getSelectionModel().selectedItemProperty().addListener(this::handleAccountTable);
@@ -323,7 +323,7 @@ public class AccountController {
                     .anyMatch(a -> a.getId() != null && a.getId().equals(finalNumero));
 
         } while (existe); //Si existe, se repite el proceso
-        
+
         //Declaración de valores predeterminados
         account.setId(numero);
         Set<Customer> customers = new HashSet<>();
@@ -343,7 +343,7 @@ public class AccountController {
      * una nueva cuenta
      */
     private void exitNewAccount() {
-
+       try{ 
         tbvAccounts.setEditable(false);
         if (newAccounts != null) {
             if (newAccounts.getDescription() == null
@@ -365,6 +365,9 @@ public class AccountController {
                 btnAdd.setSelected(true);
                 return;
             }
+        }
+        }catch(Exception e){
+            LOGGER.info(e.getMessage());
         }
         newAccounts = null;
     }
@@ -414,7 +417,7 @@ public class AccountController {
      * @param event Maneja el cambio de ventana hacia movement
      */
 
-    /*private void handleMovementOnAction(ActionEvent event){
+    private void handleMovementOnAction(ActionEvent event){
          try {
             
             Account selectAccount = tbvAccounts.getSelectionModel().getSelectedItem();
@@ -428,13 +431,16 @@ public class AccountController {
             Parent root = loader.load();
             
            MovementController controller = loader.getController();
-            controller.init(this.stage,root);
-            controller.setAccount(selectAccount);
+           controller.setAccount(selectAccount);
+           controller.init(this.stage,root);
+           
+           AccountStage.hide();
+            
         } catch (Exception e) {
             LOGGER.warning(e.getMessage());
-            handleAlert("¡Error, when going to registry!");
+            handleAlert("Error, when going to movement!");
         }
-     }*/
+     }
     /**
      *
      * @param event Manejador del boton exit
