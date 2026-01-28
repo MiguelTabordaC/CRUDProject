@@ -28,6 +28,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.core.GenericType;
 import proyectoCRUD.logic.MovementRESTClient;
@@ -79,33 +80,35 @@ public class MovementController {
     @FXML
     private ComboBox selectType;
     
-    private Double balance;
+    
     private Customer customer;
     private Account account;
     private Stage stage;
+    private final Stage movementStage = new Stage();
     
     
     private static final Logger LOGGER = Logger.getLogger("ProyectoCRUD.ui");
     
     MovementRESTClient restClient = new MovementRESTClient();
     
-    long accountId = 2654785441L;
-    String id = String.valueOf(account.getId());
+    //long accountId = 2654785441L;
+    //String id = String.valueOf(account.getId());
     
     
 
     public void init(Stage stage, Parent root) {
         try {
-            this.account = new Account();
+            /*this.account = new Account();
             this.account.setId(accountId);
-            this.account.setBalance(2000.00);
+            this.account.setBalance(2000.00);*/
             
             this.stage = stage;
             Scene scene = new Scene(root);
             stage.setScene(scene);
+            movementStage.setScene(scene);
 
-            stage.setTitle("Movements");
-            stage.setResizable(false);
+            movementStage.setTitle("Movements");
+            movementStage.setResizable(false);
                 
             
             btNewMovement.setDisable(false);
@@ -129,11 +132,11 @@ public class MovementController {
             
 
             ObservableList<Movement> movements = FXCollections.observableArrayList(restClient.findMovementByAccount_XML(
-                    new GenericType<List<Movement>>() {},id));
+                    new GenericType<List<Movement>>() {},account.getId().toString()));
             
                     
-            lbIdAcount.setText(id);
-            lbBalance.setText(String.valueOf(account.getBalance()));
+            lbIdAcount.setText(account.getId().toString());
+            //lbBalance.setText(account.getBalance().toString());
             tbMovement.setItems(movements);
             LOGGER.info(movements.toString());
             
@@ -143,17 +146,12 @@ public class MovementController {
             LOGGER.info(e.getMessage());
         }
 
-        stage.show();
+        movementStage.show();
 
-    }
-    public Double getBalance(Long id){
-        
-        return this.balance;
     }
     public void setAccount(Account account){
         this.account = account;
     }
-    
     public void setCustomer(Customer customer) {
         this.customer = customer;
     }
@@ -193,12 +191,12 @@ public class MovementController {
      */
     private void handlebtCancelOnAction(ActionEvent event) {
         try {
-
+            //this.stage.close();
             new Alert(AlertType.INFORMATION, "Are you sure you want to leave?").showAndWait();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("ProyectoSignIn.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Account.fxml"));
             Parent root = (Parent) loader.load();
-            //AccountController controller = loader.getController();
-            //controller.init(this.stage, root);
+            AccountController controller = loader.getController();
+            controller.init(this.stage, root);
 
         } catch (InternalServerErrorException e) {
             new Alert(AlertType.INFORMATION, "Internal server error, please wait or contact your service provider").showAndWait();
@@ -213,31 +211,31 @@ public class MovementController {
         try{
             Movement lastMovement = tbMovement.getItems().stream()
                     .max(Comparator.comparing(Movement::getTimestamp)).orElse(null);
+            String rm = (lastMovement.getId().toString());
             
-            String rm = String.valueOf(lastMovement.getId());
             Double lastAmount = lastMovement.getAmount();
             String tipo = (String) selectType.getValue();
             
-            lbBalance.setText(String.valueOf(account.getBalance()));
+            //lbBalance.setText(account.getBalance().toString());
             
             if (lastMovement != null) {
                 tbMovement.getItems().remove(lastMovement);
                 btUndo.setDisable(true);
-                /*if(tipo.equals("Deposit")){
-                    account.setBalance(balance+lastAmount);
-                    lbBalance.setText(String.valueOf(account.getBalance()));
+                if(tipo.equals("Deposit")){
+                    account.setBalance(account.getBalance()+lastAmount);
+                    lbBalance.setText(account.getBalance().toString());
                 }
                 if(tipo.equals("Payment")){
-                    account.setBalance(balance-lastAmount);
+                    account.setBalance(account.getBalance()-lastAmount);
                     lbBalance.setText(String.valueOf(account.getBalance()));
-                }*/
+                }
                
             }
             restClient.remove(rm);
             tbMovement.refresh();
             
         }
-        catch(Exception e){
+        catch(ClientErrorException e){
             LOGGER.info(e.getMessage());
         }
     }
@@ -245,9 +243,12 @@ public class MovementController {
     private void handlebtNewMovementOnAction(ActionEvent event) {
         try{
             Movement movement = new Movement();
+            Date timestamp= new Date();
             String tipo = (String) selectType.getValue();
-            
-            /*if(tfAmount.getText().isEmpty()){
+            double amount = Double.valueOf(tfAmount.getText());
+            //double balance = this.account.getBalance();
+            double newBalance;
+           /* if(tfAmount.getText().isEmpty()){
                 lbErrorAmount.setText("The amount is empty");
                 throw new IllegalArgumentException("The amount is empty");
             }
@@ -255,37 +256,34 @@ public class MovementController {
                 lbErrorAmount.setText("You have to select the type");
                 throw new IllegalArgumentException("You have to select the type");
             }*/
-            lbErrorAmount.setText("");
-            double amount = Double.valueOf(tfAmount.getText());
-            double balance = account.getBalance();
-            double newBalance;
+            //lbErrorAmount.setText("");
             
             movement.setAmount(amount);
             movement.setDescription(tipo);
-            Date timestamp= new Date();
             movement.setTimestamp(timestamp);
             
             if(tipo.equals("Deposit")){
-                newBalance = balance + amount;
+                /*newBalance = balance + amount;
                 movement.setBalance(newBalance);
-                this.account.setBalance(newBalance); 
+                this.account.setBalance(newBalance); */
                 lbBalance.setText(String.valueOf(account.getBalance()));
             }
             if(tipo.equals("Payment")){
-                newBalance = balance - amount;
+                /*newBalance = balance - amount;
                 movement.setBalance(newBalance);
-                this.account.setBalance(newBalance);
+                this.account.setBalance(newBalance);*/
                 lbBalance.setText(String.valueOf(account.getBalance()));
             }
             
             tbMovement.getItems().add(movement);
             tbMovement.refresh();
+            
             btUndo.setDisable(false);
-            restClient.create_XML(movement, id);
-            LOGGER.info(movement.toString());
+            restClient.create_XML(movement, account.getId().toString());
+           // LOGGER.info(movement.toString());
             
         }
-        catch(Exception e){
+        catch(IllegalArgumentException | ClientErrorException e){
             LOGGER.info(e.getMessage());
         }
 
