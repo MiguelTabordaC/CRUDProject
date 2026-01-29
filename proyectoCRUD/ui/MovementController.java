@@ -288,8 +288,7 @@ public class MovementController {
                     lbBalance.setText(String.valueOf(account.getBalance()));
                 } 
                 if(balance+line<amount){
-                    lbGeneralError.setText("You don't have enough balance");
-                    
+                    throw new Exception("You don't have enough balance");
                 }
                          
             }
@@ -314,7 +313,7 @@ public class MovementController {
             LOGGER.info(e.getMessage());
         }
         catch(Exception e){
-            
+            lbGeneralError.setText(e.toString());
         }
 
     }
