@@ -11,7 +11,7 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="576.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="proyectoCRUD.ui.MovementController">
        <children>
-          <TableView fx:id="tbMovement" layoutX="62.0" layoutY="143.0" prefHeight="403.0" prefWidth="712.0">
+          <TableView fx:id="tbMovement" layoutX="62.0" layoutY="143.0" prefHeight="363.0" prefWidth="708.0">
             <columns>
                 <TableColumn fx:id="tbColDate" minWidth="0.0" prefWidth="232.0" text="DATE" />
               <TableColumn fx:id="tbColAmount" prefWidth="188.0" text="AMOUNT" />
@@ -19,7 +19,7 @@
               <TableColumn fx:id="tbColBalance" prefWidth="150.0" text="BALANCE" />
             </columns>
           </TableView>
-          <Button fx:id="btNewMovement" layoutX="807.0" layoutY="321.0" mnemonicParsing="false" prefHeight="47.0" prefWidth="169.0" text="New movement">
+          <Button fx:id="btNewMovement" layoutX="808.0" layoutY="301.0" mnemonicParsing="false" prefHeight="47.0" prefWidth="169.0" text="New movement">
              <font>
                 <Font size="15.0" />
              </font></Button>
@@ -27,12 +27,12 @@
              <font>
                 <Font size="15.0" />
              </font></Label>
-          <Button fx:id="btUndo" layoutX="807.0" layoutY="391.0" mnemonicParsing="false" prefHeight="47.0" prefWidth="169.0" text="Undo last movement">
+          <Button fx:id="btUndo" layoutX="808.0" layoutY="368.0" mnemonicParsing="false" prefHeight="47.0" prefWidth="169.0" text="Undo last movement">
              <font>
                 <Font size="14.0" />
              </font>
           </Button>
-          <Button fx:id="btCancel" layoutX="807.0" layoutY="499.0" mnemonicParsing="false" prefHeight="47.0" prefWidth="169.0" text="Cancel">
+          <Button fx:id="btCancel" layoutX="808.0" layoutY="506.0" mnemonicParsing="false" prefHeight="47.0" prefWidth="169.0" text="Exit">
              <font>
                 <Font size="15.0" />
              </font></Button>
@@ -42,22 +42,22 @@
             <Font size="16.0" />
          </font>
       </Label>
-      <Label layoutX="806.0" layoutY="143.0" text="Type:">
+      <Label layoutX="811.0" layoutY="143.0" text="Type:">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Label layoutX="806.0" layoutY="230.0" text="Amount:">
+      <Label layoutX="807.0" layoutY="217.0" text="Amount:">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <TextField fx:id="tfAmount" layoutX="807.0" layoutY="262.0" prefHeight="32.0" prefWidth="169.0">
+      <TextField fx:id="tfAmount" layoutX="808.0" layoutY="249.0" prefHeight="32.0" prefWidth="169.0">
          <font>
             <Font size="16.0" />
          </font>
       </TextField>
-      <ComboBox fx:id="selectType" layoutX="803.0" layoutY="170.0" prefHeight="32.0" prefWidth="169.0" />
+      <ComboBox fx:id="selectType" layoutX="808.0" layoutY="170.0" prefHeight="32.0" prefWidth="169.0" />
       <Label fx:id="lbBalance" layoutX="522.0" layoutY="72.0" prefHeight="25.0" prefWidth="236.0">
          <font>
             <Font size="16.0" />
@@ -66,6 +66,11 @@
       <Label layoutX="447.0" layoutY="72.0" prefHeight="25.0" prefWidth="75.0" text="Balance:" wrapText="true">
          <font>
             <Font size="15.0" />
+         </font>
+      </Label>
+      <Label fx:id="lbGeneralError" layoutX="62.0" layoutY="530.0" prefHeight="15.0" prefWidth="708.0" textFill="RED">
+         <font>
+            <Font size="14.0" />
          </font>
       </Label>
        </children>

@@ -8,11 +8,10 @@ package proyectoCRUD;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
-import proyectoCRUD.ui.ChangePasswordController;
+import proyectoCRUD.model.Account;
 import proyectoCRUD.ui.MovementController;
-import proyectoCRUD.ui.ProjectInterfacesController;
+import proyectoCRUD.ui.SignInController;
 
 /**
  *
@@ -26,8 +25,14 @@ public class ChangePasswordAplication extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("ui/Movement.fxml"));
         Parent root = (Parent)loader.load();
         MovementController controller = loader.getController();
+        //el siguiente codigo se borrara cuando felipe pase bien el account
+        Account account = new Account();
+        account.setId(2654785441L);
+        //account.setBalance(10000.00);
+        controller.setAccount(account);
+        //fin del codigo a eliminar
+        
         controller.init(stage, root);
-        stage.show();
     }
 
     /**
