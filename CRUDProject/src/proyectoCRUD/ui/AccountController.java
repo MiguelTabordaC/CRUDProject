@@ -177,17 +177,21 @@ public class AccountController {
     private void handleDescription(TableColumn.CellEditEvent<Account, String> event) {
         Account account = event.getRowValue();
         String newValue = event.getNewValue();
-        if (newValue == null || newValue.trim().isEmpty()) {
-            handleAlert("La descripción no puede estar vacía");
-            // Restaurar el valor anterior
+
+        if (account != newAccounts) {
             account.setDescription(event.getOldValue());
             tbvAccounts.refresh();
             return;
         }
-        account.setDescription(newValue);
-        if (account.getId() != null && account != newAccounts) {
-            client.updateAccount_XML(account);
+
+        if (newValue == null || newValue.trim().isEmpty()) {
+            handleAlert("La descripción no puede estar vacía");
+            account.setDescription(event.getOldValue());
+            tbvAccounts.refresh();
+            return;
         }
+
+        account.setDescription(newValue);
 
     }
 
@@ -199,6 +203,12 @@ public class AccountController {
         Account account = event.getRowValue();
         AccountType newType = event.getNewValue();
 
+        if (account != newAccounts) {
+            account.setType(event.getOldValue());
+            tbvAccounts.refresh();
+            return;
+        }
+
         account.setType(newType);
 
         if (newType == AccountType.CREDIT) {
@@ -206,9 +216,6 @@ public class AccountController {
         } else {
             account.setCreditLine(null);
             tcCreditLine.setEditable(false);
-        }
-        if (account.getId() != null && account != newAccounts) {
-            client.updateAccount_XML(account);
         }
 
         tbvAccounts.refresh();
@@ -223,19 +230,20 @@ public class AccountController {
         Account account = event.getRowValue();
         Double newValue = event.getNewValue();
 
-        if (account.getType() != AccountType.CREDIT) {
+        if (account != newAccounts || account.getType() != AccountType.CREDIT) {
+            account.setCreditLine(event.getOldValue());
+            tbvAccounts.refresh();
             return;
         }
 
         if (newValue == null || newValue < 0) {
             handleAlert("Credit line cannot be negative");
+            account.setCreditLine(event.getOldValue());
+            tbvAccounts.refresh();
             return;
         }
 
         account.setCreditLine(newValue);
-        if (account.getId() != null && account != newAccounts) {
-            client.updateAccount_XML(account);
-        }
 
     }
 
@@ -247,17 +255,21 @@ public class AccountController {
         Account account = event.getRowValue();
         Double newValue = event.getNewValue();
 
+        if (account != newAccounts) {
+            account.setBeginBalance(event.getOldValue());
+            tbvAccounts.refresh();
+            return;
+        }
+
         if (newValue == null || newValue < 0) {
             handleAlert("Begin balance cannot be negative");
+            account.setBeginBalance(event.getOldValue());
             tbvAccounts.refresh();
             return;
         }
 
         account.setBeginBalance(newValue);
         account.setBalance(newValue);
-        if (account.getId() != null && account != newAccounts) {
-            client.updateAccount_XML(account);
-        }
 
     }
 
@@ -289,7 +301,7 @@ public class AccountController {
             btnDelete.setDisable(true);
             btnRefresh.setDisable(true);
             btnMovement.setDisable(true);
-            tbvAccounts.setEditable(true);
+            //tbvAccounts.edit(newAccounts.size() -1, tcDescription,tcType,tcBeginBalance);
             createNewAccount();
         } else {
             btnDelete.setDisable(false);
@@ -330,7 +342,9 @@ public class AccountController {
         customers.add(customer);
         account.setCustomers(customers);
         tbvAccounts.getItems().add(account);
+        tbvAccounts.getSelectionModel().clearSelection();
         tbvAccounts.getSelectionModel().select(account);
+        tbvAccounts.scrollTo(account);
         account.setBeginBalanceTimestamp(new Date());
         account.setType(AccountType.STANDARD);
         account.setBalance(0.0);
@@ -343,33 +357,34 @@ public class AccountController {
      * una nueva cuenta
      */
     private void exitNewAccount() {
-       try{ 
-        tbvAccounts.setEditable(false);
-        if (newAccounts != null) {
-            if (newAccounts.getDescription() == null
-                    || newAccounts.getDescription().trim().isEmpty()) {
-                handleAlert("Description is required");
-                btnAdd.setSelected(true);
-                return;
+        try {
+            tbvAccounts.setEditable(false);
+            if (newAccounts != null) {
+                if (newAccounts.getDescription() == null
+                        || newAccounts.getDescription().trim().isEmpty()) {
+                    handleAlert("Description is required");
+                    btnAdd.setSelected(true);
+                    return;
+                }
+                if (newAccounts.getType() == AccountType.CREDIT
+                        && newAccounts.getCreditLine() == null) {
+                    handleAlert("Credit line is required for credit accounts");
+                    btnAdd.setSelected(true);
+                    return;
+                }
+                try {
+                    client.createAccount_XML(newAccounts);
+                } catch (Exception e) {
+                    handleAlert("Error creating account");
+                    btnAdd.setSelected(true);
+                    return;
+                }
             }
-            if (newAccounts.getType() == AccountType.CREDIT
-                    && newAccounts.getCreditLine() == null) {
-                handleAlert("Credit line is required for credit accounts");
-                btnAdd.setSelected(true);
-                return;
-            }
-            try {
-                client.createAccount_XML(newAccounts);
-            } catch (Exception e) {
-                handleAlert("Error creating account");
-                btnAdd.setSelected(true);
-                return;
-            }
-        }
-        }catch(Exception e){
+        } catch (Exception e) {
             LOGGER.info(e.getMessage());
         }
         newAccounts = null;
+        tbvAccounts.refresh();
     }
 
     /**
@@ -416,10 +431,9 @@ public class AccountController {
      *
      * @param event Maneja el cambio de ventana hacia movement
      */
+    private void handleMovementOnAction(ActionEvent event) {
+        try {
 
-    private void handleMovementOnAction(ActionEvent event){
-         try {
-            
             Account selectAccount = tbvAccounts.getSelectionModel().getSelectedItem();
 
             if (selectAccount == null) {
@@ -429,18 +443,17 @@ public class AccountController {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("Movement.fxml"));
             Parent root = loader.load();
-            
-           MovementController controller = loader.getController();
-           controller.setAccount(selectAccount);
-           controller.init(this.stage,root);
-           
-           AccountStage.hide();
-            
+
+            MovementController controller = loader.getController();
+            controller.setAccount(selectAccount);
+            controller.init(this.stage, root);
+
         } catch (Exception e) {
             LOGGER.warning(e.getMessage());
             handleAlert("Error, when going to movement!");
         }
-     }
+    }
+
     /**
      *
      * @param event Manejador del boton exit
