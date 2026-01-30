@@ -275,8 +275,8 @@ public class MovementController {
                     newBalance = balance - amount;
                     movement.setBalance(newBalance);
                     this.account.setBalance(newBalance);
-                    accClient.updateAccount_XML(account);
-                    lbBalance.setText(String.valueOf(account.getBalance()));
+                    //accClient.updateAccount_XML(account);
+                    //lbBalance.setText(String.valueOf(account.getBalance()));
                 }
                 if(balance+line>= amount){
                     double n = amount-balance;
@@ -284,13 +284,12 @@ public class MovementController {
                     account.setBalance(0.0);
                     movement.setBalance(0.0);
                     
-                    accClient.updateAccount_XML(account);
-                    lbBalance.setText(String.valueOf(account.getBalance()));
+                    //accClient.updateAccount_XML(account);
+                    //lbBalance.setText(String.valueOf(account.getBalance()));
                 } 
                 if(balance+line<amount){
                     throw new Exception("You don't have enough balance");
-                }
-                         
+                }      
             }
             if(tipo.equals("Deposit")){
                 newBalance = balance + amount;
@@ -300,7 +299,7 @@ public class MovementController {
                 lbBalance.setText(String.valueOf(account.getBalance()));
             }
             
-            //accClient.updateAccount_XML(account);
+            accClient.updateAccount_XML(this.account);
             tbMovement.getItems().add(movement);
             tbMovement.refresh();
             
