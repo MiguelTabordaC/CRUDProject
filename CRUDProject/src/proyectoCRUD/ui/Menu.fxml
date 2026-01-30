@@ -4,9 +4,10 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="131.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="179.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+fx:controller="proyectoCRUD.ui.MenuController" >
    <children>
-      <MenuBar>
+      <MenuBar prefHeight="29.0" prefWidth="182.0">
         <menus>
           <Menu mnemonicParsing="false" text="Operations">
             <items>
@@ -16,7 +17,7 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
             <items>
-              <MenuItem  fx:id="helpCustomer" mnemonicParsing="false" text="Customer" />
+              <MenuItem fx:id="helpCustomer" mnemonicParsing="false" text="Customer" />
                   <MenuItem fx:id="helpAccount" mnemonicParsing="false" text="Account" />
                   <MenuItem fx:id="helpMovement" mnemonicParsing="false" text="Movement" />
                   <MenuItem fx:id="helpAboutApp" mnemonicParsing="false" text="AboutApp" />

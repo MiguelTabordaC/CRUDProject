@@ -5,7 +5,7 @@
  */
 package proyectoCRUD.ui;
 
-//import com.sun.enterprise.glassfish.bootstrap.Constants;
+
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.scene.Parent;
@@ -19,7 +19,7 @@ import javafx.stage.Stage;
  */
 public class MenuController {
 
-    /*private MenuItem menuExit;
+    private MenuItem menuExit;
     private MenuItem menuLogOut;
     private MenuItem helpAccount;
     private MenuItem helpMovement;
@@ -36,7 +36,7 @@ public class MenuController {
      * @param stage La etapa principal de esta ventana.
      * @param root El nodo raíz del diseño FXML para esta escena..
      */
-    /*public void init(Stage stage, Parent root) {
+    public void init(Stage stage, Parent root) {
         Scene scene = new Scene(root);
         stage.setScene(scene);
         this.stage = stage;
@@ -69,6 +69,4 @@ public class MenuController {
         
     }
 
-    
- */   
 }

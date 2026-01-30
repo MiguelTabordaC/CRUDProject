@@ -8,6 +8,7 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="576.0" prefWidth="1024.0" style="-fx-background-color: FFFFFF;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="proyectoCRUD.ui.AccountController">
    <children>
+       <fx:include fx:id="menuAccount" source="Menu.fxml"/>
       <ImageView fitHeight="158.0" fitWidth="266.0" layoutX="388.0" layoutY="26.0">
          <image>
             <Image url="proyectoCRUD/ui/resources/Logo.png" />

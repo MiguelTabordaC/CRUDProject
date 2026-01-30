@@ -31,6 +31,7 @@ import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import javafx.util.converter.DoubleStringConverter;
 import javax.ws.rs.core.GenericType;
 import proyectoCRUD.logic.AccountRESTClient;
@@ -45,7 +46,11 @@ import proyectoCRUD.model.Customer;
  * @author luis felipe
  */
 public class AccountController {
-
+    
+    @FXML 
+    private Window menuAccount;
+    @FXML 
+    private MenuController menuController;
     @FXML
     private Button btnRefresh, btnDelete, btnMovement, btnExit;
     @FXML
