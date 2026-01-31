@@ -16,16 +16,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
+import javafx.scene.web.WebView;
+import javafx.scene.web.WebEngine;
 
 /**
  *
  * @author luisf
  */
 public class MenuController {
-
-    private static final String TITLE_MOVEMENTS = "Movements";
-    private static final String TITLE_ACCOUNTS = "Accounts Management";
-    private static final String TITLE_SIGNIN = "Sign In";
 
     @FXML
     public void menuExitApp(ActionEvent event) {
@@ -35,52 +33,39 @@ public class MenuController {
 
     @FXML
     public void menuLogOut(ActionEvent event) {
-        
-        Stage stage = getAccountStage(event);
-        
-        navigate(event, "SignIn.fxml", TITLE_SIGNIN);
-        
-         if (stage != null && TITLE_ACCOUNTS.equals(stage.getTitle())) {
-            return; 
+      try {
+
+            Stage stage = getAccountStage(event);
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("SignIn.fxml"));
+            Parent root = loader.load();
+            SignInController controller = loader.getController();
+            controller.init(stage, root);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Error", "Log Out Error", "Could not load the sign-in window.");
         }
     }
 
     @FXML
     private void helpAccount(ActionEvent event) {
-
+        ventanaAyuda("Help - Accounts", "/proyectoCRUD/ui/resources/helpAccount.html");
     }
 
     @FXML
     private void helpMovement(ActionEvent event) {
-
+        ventanaAyuda("Help - Movements", "/proyectoCRUD/ui/resources/helpMovement.html");
     }
 
     @FXML
     private void helpCustomer(ActionEvent event) {
-
+        ventanaAyuda("Help - Customers", "/proyectoCRUD/ui/resources/helpCustomer.html");
     }
 
     @FXML
     private void helpAboutApp(ActionEvent event) {
-
-    }
-    private void navigate(ActionEvent event, String fxmlFile, String title) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
-            Parent root = loader.load();
-
-            Stage stage = getAccountStage(event);
-            if (stage == null) return;
-
-            Scene scene = new Scene(root);
-            stage.setTitle(title); // IMPORTANTE: Fijamos el título para poder comprobarlo después
-            stage.setScene(scene);
-            stage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert("Error", "Error de Navegación", "No se pudo cargar: " + fxmlFile);
-        }
+        ventanaAyuda("About the App", "/proyectoCRUD/ui/resources/helpAbout.html");
     }
      private Stage getAccountStage(ActionEvent event) {
         Object source = event.getSource();
@@ -101,6 +86,32 @@ public class MenuController {
         alert.setHeaderText(header);
         alert.setContentText(content);
         alert.showAndWait();
+    }
+      private void ventanaAyuda(String title, String resourcePath) {
+        try {
+            Stage helpStage = new Stage();
+            helpStage.setTitle(title);
+
+            WebView webView = new WebView();
+            WebEngine webEngine = webView.getEngine();
+
+            java.net.URL url = getClass().getResource(resourcePath);
+            
+            if (url == null) {
+                showAlert("Error", "File not found", "Could not find file: " + resourcePath);
+                return;
+            }
+
+            webEngine.load(url.toExternalForm());
+
+            Scene scene = new Scene(webView, 600, 400);
+            helpStage.setScene(scene);
+            helpStage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert("Error", "Help Error", "Could not open the help window.");
+        }
     }
 
 }

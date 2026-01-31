@@ -1,0 +1,355 @@
+<!DOCTYPE html> 
+
+<html lang="en"> 
+
+<head> 
+
+    <meta charset="UTF-8"> 
+
+    <title>Documentation – Bank Account Management</title> 
+
+    <style> 
+
+        body { 
+
+            font-family: Arial, Helvetica, sans-serif; 
+
+            line-height: 1.6; 
+
+            margin: 40px; 
+
+            background-color: #f8f9fa; 
+
+            color: #333; 
+
+        } 
+
+        h1, h2, h3 { 
+
+            color: #2c3e50; 
+
+        } 
+
+        code { 
+
+            background-color: #e9ecef; 
+
+            padding: 2px 5px; 
+
+            border-radius: 4px; 
+
+            font-size: 0.95em; 
+
+        } 
+
+        ul { 
+
+            margin-left: 20px; 
+
+        } 
+
+        .section { 
+
+            margin-bottom: 30px; 
+
+        } 
+
+        .note { 
+
+            background-color: #fff3cd; 
+
+            padding: 10px; 
+
+            border-left: 4px solid #ffc107; 
+
+            margin-top: 10px; 
+
+        } 
+
+    </style> 
+
+</head> 
+
+<body> 
+
+  
+
+<h1>Bank Account Management Application</h1> 
+
+  
+
+<p> 
+
+This application allows for the management of bank accounts associated with a customer, 
+
+including the creation, editing, deletion, and viewing of accounts, as well as 
+
+navigation to the movements of a specific account. 
+
+</p> 
+
+  
+
+<div class="section"> 
+
+    <h2>1. General Structure</h2> 
+
+    <p> 
+
+        The application is developed in <strong>JavaFX</strong> following a client-server pattern, 
+
+        where the graphical interface communicates with a REST backend 
+
+        via the <code>AccountRESTClient</code> class. 
+
+    </p> 
+
+    <p> 
+
+        The main view displays a table (<code>TableView</code>) with the accounts 
+
+        associated with the authenticated customer. 
+
+    </p> 
+
+</div> 
+
+  
+
+<div class="section"> 
+
+    <h2>2. Account Table</h2> 
+
+    <p> 
+
+        The table displays the following information for each account: 
+
+    </p> 
+
+    <ul> 
+
+        <li><strong>ID</strong>: Unique identifier of the account (read-only).</li> 
+
+        <li><strong>Description</strong>: Account description (editable).</li> 
+
+        <li><strong>Type</strong>: Account type (<code>STANDARD</code> or <code>CREDIT</code>).</li> 
+
+        <li><strong>Begin Balance</strong>: Initial balance.</li> 
+
+        <li><strong>Balance</strong>: Current balance (read-only).</li> 
+
+        <li><strong>Credit Line</strong>: Credit line (editable only for credit-type accounts).</li> 
+
+        <li><strong>Begin Balance Timestamp</strong>: Creation date.</li> 
+
+    </ul> 
+
+</div> 
+
+  
+
+<div class="section"> 
+
+    <h2>3. Data Editing</h2> 
+
+  
+
+    <h3>3.1 Description</h3> 
+
+    <p> 
+
+        The description can be edited directly from the table. 
+
+        The system validates that it is not empty and, in the case of an existing account, 
+
+        it is automatically updated on the server. 
+
+    </p> 
+
+  
+
+    <h3>3.2 Begin Balance and Balance</h3> 
+
+    <p> 
+
+        When modifying the <code>Begin Balance</code>, the <code>Balance</code> field 
+
+        updates immediately with the same value. 
+
+        This ensures consistency between both fields from the start. 
+
+    </p> 
+
+  
+
+    <div class="note"> 
+
+        The balance is not manually editable by the user. 
+
+    </div> 
+
+  
+
+    <h3>3.3 Credit Line</h3> 
+
+    <p> 
+
+        The <code>Credit Line</code> field is only editable when the account type is 
+
+        <code>CREDIT</code>. For <code>STANDARD</code> accounts, this field remains locked. 
+
+    </p> 
+
+    <p> 
+
+        The application validates that the entered value is not negative before accepting it. 
+
+    </p> 
+
+</div> 
+
+  
+
+<div class="section"> 
+
+    <h2>4. Creating New Accounts</h2> 
+
+    <p> 
+
+        Account creation is done via a toggle button (<code>Add</code>): 
+
+    </p> 
+
+    <ul> 
+
+        <li>When activated, a new account is created with default values.</li> 
+
+        <li>The table enters edit mode.</li> 
+
+        <li>The user must complete the required fields.</li> 
+
+        <li>Upon deactivating the button, the account is validated and sent to the server.</li> 
+
+    </ul> 
+
+  
+
+    <p> 
+
+        During this process, the new account is kept in memory and is not updated 
+
+        on the server until its creation is confirmed. 
+
+    </p> 
+
+</div> 
+
+  
+
+<div class="section"> 
+
+    <h2>5. Update and Persistence</h2> 
+
+    <p> 
+
+        For existing accounts, any modification made from the table 
+
+        is automatically sent to the backend via REST calls. 
+
+    </p> 
+
+    <p> 
+
+        This ensures that changes are reflected immediately in the database. 
+
+    </p> 
+
+</div> 
+
+  
+
+<div class="section"> 
+
+    <h2>6. Data Refresh</h2> 
+
+    <p> 
+
+        The <strong>Refresh</strong> button requests all accounts associated with the customer 
+
+        from the server again and reloads the table with the updated data. 
+
+    </p> 
+
+    <p> 
+
+        This mechanism ensures that the view is synchronized with the actual server state. 
+
+    </p> 
+
+</div> 
+
+  
+
+<div class="section"> 
+
+    <h2>7. Deleting Accounts</h2> 
+
+    <p> 
+
+        An account can only be deleted if it has no associated movements. 
+
+        Before proceeding, the application requests confirmation from the user. 
+
+    </p> 
+
+</div> 
+
+  
+
+<div class="section"> 
+
+    <h2>8. Navigation to Movements</h2> 
+
+    <p> 
+
+        Upon selecting an account and pressing the <strong>Movements</strong> button, 
+
+        the application opens a new window displaying the movements 
+
+        corresponding to the selected account. 
+
+    </p> 
+
+    <p> 
+
+        The account is explicitly passed to the movements controller, 
+
+        ensuring that incorrect data is not worked with. 
+
+    </p> 
+
+</div> 
+
+  
+
+<div class="section"> 
+
+    <h2>9. Conclusion</h2> 
+
+    <p> 
+
+        The application provides complete and secure bank account management, 
+
+        combining interface validations, automatic data updates, and 
+
+        efficient communication with the REST backend. 
+
+    </p> 
+
+</div> 
+
+  
+
+</body> 
+
+</html>
