@@ -11,16 +11,16 @@ fx:controller="proyectoCRUD.ui.MenuController" >
         <menus>
           <Menu mnemonicParsing="false" text="Operations">
             <items>
-              <MenuItem fx:id="menuLogOut" mnemonicParsing="false" text="Log out" />
-                  <MenuItem fx:id="menuExitApp" mnemonicParsing="false" text="Exit App" />
+              <MenuItem fx:id="menuLogOut" mnemonicParsing="false" onAction="#menuLogOut" text="Log out" />
+                  <MenuItem fx:id="menuExitApp" mnemonicParsing="false" onAction="#menuExitApp" text="Exit App" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
             <items>
-              <MenuItem fx:id="helpCustomer" mnemonicParsing="false" text="Customer" />
-                  <MenuItem fx:id="helpAccount" mnemonicParsing="false" text="Account" />
-                  <MenuItem fx:id="helpMovement" mnemonicParsing="false" text="Movement" />
-                  <MenuItem fx:id="helpAboutApp" mnemonicParsing="false" text="AboutApp" />
+              <MenuItem fx:id="helpCustomer" mnemonicParsing="false" onAction="#helpCustomer" text="Customer" />
+                  <MenuItem fx:id="helpAccount" mnemonicParsing="false" onAction="#helpAccount" text="Account" />
+                  <MenuItem fx:id="helpMovement" mnemonicParsing="false" onAction="#helpMovement" text="Movement" />
+                  <MenuItem fx:id="helpAboutApp" mnemonicParsing="false" onAction="#helpAboutApp" text="AboutApp" />
             </items>
           </Menu>
         </menus>
