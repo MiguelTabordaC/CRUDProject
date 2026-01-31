@@ -39,10 +39,11 @@ import proyectoCRUD.model.AccountType;
 import proyectoCRUD.model.Customer;
 
 /**
- * Declaracion de las respectivas variables y las respectivas columnas de la
- * tabla
- *
- * @author luis felipe
+ * Controlador de la interfaz gráfica para la gestión de Cuentas Bancarias (Account.fxml).
+ * Esta clase maneja la lógica de visualización, creación, edición y borrado de cuentas,
+ * así como la navegación hacia la vista de movimientos. Se comunica con el servidor
+ * mediante {@link AccountRESTClient}.
+ * * @author luis felipe
  */
 public class AccountController {
 
@@ -76,13 +77,11 @@ public class AccountController {
     private Account newAccounts;
 
     /**
-     * Inicializa la etapa principal de la ventana Iniciar sesión. Configura la
-     * escena, las propiedades del escenario (título, redimensionable), los
-     * estados de control iniciales, y oyentes para cambios de campo y enfoque,
-     * y controladores de acciones para botones e hipervínculos.
-     *
-     * @param stage La etapa principal de esta ventana.
-     * @param root El nodo raíz del diseño FXML para esta escena..
+     * Inicializa la etapa principal de la ventana de Gestión de Cuentas.
+     * Configura la escena, título, propiedades de las columnas (CellFactories),
+     * manejadores de eventos de edición y carga los datos iniciales del cliente.
+     * @param stage La etapa (Stage) principal de esta ventana.
+     * @param root El nodo raíz del diseño FXML cargado.
      */
     public void init(Stage stage, Parent root) {
         try {
@@ -208,16 +207,18 @@ public class AccountController {
     }
 
     /**
-     *
-     * @param customer obtenemos el customer
+     * Recibe el objeto Cliente desde el controlador anterior (SignIn).
+     * Este método es necesario para cargar los datos específicos del usuario logueado.
+     * @param customer El objeto Customer autenticado.
      */
     public void setCustomer(Customer customer) {
         this.customer = customer;
     }
 
     /**
-     *
-     * @param event
+     * Maneja el evento de confirmación de edición en la columna Descripción.
+     * Valida que el texto no esté vacío y actualiza el servidor si es una cuenta existente.
+     * @param event Evento de edición de celda.
      */
     private void handleDescription(TableColumn.CellEditEvent<Account, String> event) {
         Account account = event.getRowValue();
@@ -243,9 +244,10 @@ public class AccountController {
         }
     }
 
-    /**
-     *
-     * @param event
+     /**
+     * Maneja el evento de cambio de Tipo de Cuenta (Standard/Credit).
+     * Ajusta la visibilidad o edición de la línea de crédito según el tipo seleccionado.
+     * @param event Evento de edición de celda.
      */
     private void handleType(TableColumn.CellEditEvent<Account, AccountType> event) {
         Account account = event.getRowValue();
@@ -274,8 +276,9 @@ public class AccountController {
     }
 
     /**
-     *
-     * @param event
+     * Maneja la edición de la Línea de Crédito.
+     * Valida que el valor no sea negativo y que la cuenta sea de tipo Crédito.
+     * @param event Evento de edición de celda.
      */
     private void handleCreditLine(TableColumn.CellEditEvent<Account, Double> event) {
         Account account = event.getRowValue();
@@ -308,8 +311,9 @@ public class AccountController {
     }
 
     /**
-     *
-     * @param event
+     * Maneja la edición del Balance Inicial.
+     * Sincroniza el balance inicial con el balance actual.
+     * @param event Evento de edición de celda.
      */
     private void handleBeginBalance(TableColumn.CellEditEvent<Account, Double> event) {
         Account account = event.getRowValue();
@@ -337,10 +341,12 @@ public class AccountController {
     }
 
     /**
-     *
-     * @param observable
-     * @param oldValue
-     * @param newValue
+     * Listener para la selección de filas en la tabla.
+     * Habilita o deshabilita botones según si hay una fila seleccionada.
+     * Se bloquea si estamos en modo creación para evitar perder el foco.
+     * @param observable Objeto observable.
+     * @param oldValue Valor anterior.
+     * @param newValue Nueva fila seleccionada.
      */
     private void handleAccountTable(ObservableValue observable, Object oldValue, Object newValue) {
 
@@ -358,9 +364,9 @@ public class AccountController {
     }
 
     /**
-     *
-     * @param event Button AddAccount se queda pulsado hasta no terminar de
-     * crear
+     * Manejador del botón "AddAccount" (ToggleButton).
+     * Alterna entre iniciar el proceso de creación y confirmar el guardado.
+     * * @param event Evento del botón.
      */
     private void handleCreate(ActionEvent event) {
         if (btnAdd.isSelected()) {
@@ -379,7 +385,9 @@ public class AccountController {
     }
 
     /**
-     * Creacion de la accion cuando se pulsa el boton Add
+     * Lógica interna para preparar una nueva cuenta en la tabla.
+     * Genera un ID aleatorio, inserta una fila vacía y cambia el estado de la UI
+     * (Botón Add -> Save, Botón Delete -> Cancel).
      */
     private void createNewAccount() {
 Account account = new Account();
@@ -431,8 +439,8 @@ Account account = new Account();
     }
 
     /**
-     * Accion consecuente al pulsar nuevamente create para finalizar de crear
-     * una nueva cuenta
+     * Lógica interna para finalizar la creación y guardar en la base de datos.
+     * Realiza validaciones finales y llama al servicio REST.
      */
     private void exitNewAccount() {
         try {
@@ -475,8 +483,9 @@ Account account = new Account();
     }
 
     /**
-     *
-     * @param event accion de refrescar la tabla
+     * Recarga los datos de la tabla desde el servidor.
+     * Útil para sincronizar cambios realizados por otros usuarios.
+     * @param event Evento del botón Refresh.
      */
     private void handleRefresh(ActionEvent event) {
 
@@ -490,7 +499,10 @@ Account account = new Account();
     }
 
     /**
-     * @parama event Manejador del borrado de la cuenta
+     * Manejador dual para el botón Delete/Cancel.
+     * Si estamos en modo creación, funciona como CANCELAR (elimina la fila temporal).
+     * Si estamos en modo normal, funciona como BORRAR (elimina la cuenta de la BD).
+     * @param event Evento del botón.
      */
     private void handleDelete(ActionEvent event) {
 
@@ -541,8 +553,8 @@ Account account = new Account();
     }
 
     /**
-     *
-     * @param event Maneja el cambio de ventana hacia movement
+     * Navega a la ventana de Movimientos (Movement.fxml) para la cuenta seleccionada.
+     * @param event Evento del botón Movements.
      */
     private void handleMovementOnAction(ActionEvent event) {
         try {
@@ -568,8 +580,9 @@ Account account = new Account();
     }
 
     /**
-     *
-     * @param event Manejador del boton exit
+     * Gestiona la salida de la ventana actual hacia la pantalla de Login (SignIn).
+     * Solicita confirmación antes de salir.
+     * @param event Evento de salida (Botón Exit o cerrar ventana).
      */
     private void handleExitOnAction(Event event) {
         try {
@@ -594,8 +607,8 @@ Account account = new Account();
     }
 
     /**
-     *
-     * @param mensaje de error en el programa
+     * Muestra una alerta de error al usuario.
+     * @param mensaje Mensaje descriptivo del error.
      */
     private void handleAlert(String mensaje) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -604,9 +617,9 @@ Account account = new Account();
     }
 
     /**
-     *
-     * @param mensaje para confirmar la salida
-     * @return Devuelve un mensaje de confirmacion
+     * Muestra un cuadro de diálogo de confirmación.
+     * @param mensaje Pregunta a realizar al usuario.
+     * @return true si el usuario pulsa OK, false en caso contrario.
      */
     private boolean handleConfirm(String mensaje) {
 
