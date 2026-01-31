@@ -168,13 +168,13 @@ public class MovementController {
         try{
             if(oldValue){
                 if(tfAmount.getText().isEmpty()){
-                    lbErrorAmount.setText("The amount is empty");
-                    throw new IllegalArgumentException("The amount is empty");
+                    throw new Exception("The amount is empty");
                 }
                 lbErrorAmount.setText("");
             }
         }
         catch (Exception e){
+            lbErrorAmount.setText(e.toString());
             LOGGER.info(e.getMessage());
         }
     }
@@ -208,113 +208,107 @@ public class MovementController {
             new Alert(AlertType.INFORMATION, "Internal server error, please wait or contact your service provider").showAndWait();
         }
     }
-
+    
     private void handlebtUndoOnAction(ActionEvent event) {
-        try{
+        try {
+            //Ultimo movimiento
             Movement lastMovement = tbMovement.getItems().stream()
-                    .max(Comparator.comparing(Movement::getTimestamp)).orElse(null);
-            
-            String rm = (lastMovement.getId().toString());
-            
-            
-            double lastAmount = lastMovement.getAmount();
-            String tipo = lastMovement.getDescription();   
-            
-            lbBalance.setText(account.getBalance().toString());
-            
-            if (lastMovement != null) {
-                //if(tipo == null){}
-                if("Deposit".equals(tipo)){
-                    account.setBalance(account.getBalance() + lastAmount);
-                    //lbBalance.setText(account.getBalance().toString());
-                }
-                if("Payment".equals(tipo)){
-                    account.setBalance(account.getBalance() - lastAmount);
-                    //lbBalance.setText(String.valueOf(account.getBalance()));
-                }
-                lbBalance.setText(account.getBalance().toString());
-                tbMovement.getItems().remove(lastMovement);
-                btUndo.setDisable(true);
-               
+                    .max(Comparator.comparing(Movement::getTimestamp))
+                    .orElse(null);
+
+            if (lastMovement == null) {
+                throw new Exception("No movements to undo");
             }
-            accClient.updateAccount_XML(account);
-            restClient.remove(rm);
-            tbMovement.refresh();
             
-        }
-        catch(ClientErrorException e){
-            LOGGER.info(e.getMessage());
+            String movementId = lastMovement.getId().toString();
+            double amount = lastMovement.getAmount();
+            String tipo = lastMovement.getDescription();
+            
+            if ("Deposit".equals(tipo)) {
+                account.setBalance(account.getBalance() - amount);
+            } else if ("Payment".equals(tipo)) {
+                account.setBalance(account.getBalance() + amount);
+            }
+
+            accClient.updateAccount_XML(account);
+            restClient.remove(movementId);
+
+            lbBalance.setText(String.format("%.2f", account.getBalance()));
+            tbMovement.getItems().remove(lastMovement);
+            tbMovement.refresh();
+
+            btUndo.setDisable(true);
+
+        } catch (ClientErrorException e) {
+            LOGGER.severe("Error undoing movement: " + e.getMessage());
+            // Aquí podrías mostrar una alerta al usuario
+        } catch (Exception e) {
+            lbGeneralError.setText(e.toString());
+            LOGGER.severe("Unexpected error: " + e.getMessage());
         }
     }
 
     private void handlebtNewMovementOnAction(ActionEvent event){
         try{
-            Movement movement = new Movement();
-            Date timestamp= new Date();
-            String tipo = (String) selectType.getValue();
-            double amount = Double.valueOf(tfAmount.getText());
-            lbBalance.setText(String.valueOf(account.getBalance()));
-            double newBalance = 0.0;
-           /* if(tfAmount.getText().isEmpty()){
-                lbErrorAmount.setText("The amount is empty");
-                throw new IllegalArgumentException("The amount is empty");
+            if (tfAmount.getText().isEmpty() || selectType.getValue() == null) {
+                throw new Exception("Please fill all fields");
             }
-            if(!selectType.hasProperties()){
-                lbErrorAmount.setText("You have to select the type");
-                throw new IllegalArgumentException("You have to select the type");
-            }*/
-            //lbErrorAmount.setText("");
-            double balance = account.getBalance();
-            double line = account.getCreditLine();
+            double balanceActual = account.getBalance();
+            double lineActual = account.getCreditLine();
+            
+            Movement movement = new Movement();
+            
+            String tipo = (String) selectType.getValue();
+            double amount = Double.parseDouble(tfAmount.getText());
+            
+            double newBalance = balanceActual;
+            double newLine = lineActual;
+            
+            lbBalance.setText(String.valueOf(account.getBalance()));
+            
+           
+            if("Payment".equals(tipo)){
+                if(balanceActual + lineActual < amount){
+                    throw new Exception("You don't have enough balance");
+                } 
+                if(balanceActual >= amount){
+                    newBalance = balanceActual - amount;
+                }else{
+                    double lineNecesario = amount - balanceActual;
+                    newBalance = 0.0;
+                    newLine = lineActual - lineNecesario;
+                }   
+            }
+            if("Deposit".equals(tipo)){
+                newBalance = balanceActual + amount;
+            }
             
             movement.setAmount(amount);
             movement.setDescription(tipo);
-            movement.setTimestamp(timestamp);
-            if(tipo.equals("Payment")){
-                if(balance>=amount){
-                    newBalance = balance - amount;
-                    movement.setBalance(newBalance);
-                    this.account.setBalance(newBalance);
-                    //accClient.updateAccount_XML(account);
-                    //lbBalance.setText(String.valueOf(account.getBalance()));
-                }
-                if(balance+line>= amount){
-                    double n = amount-balance;
-                    account.setCreditLine(line-n);
-                    account.setBalance(0.0);
-                    movement.setBalance(0.0);
-                    
-                    //accClient.updateAccount_XML(account);
-                    //lbBalance.setText(String.valueOf(account.getBalance()));
-                } 
-                if(balance+line<amount){
-                    throw new Exception("You don't have enough balance");
-                }      
-            }
-            if(tipo.equals("Deposit")){
-                newBalance = balance + amount;
-                movement.setBalance(newBalance);
-                this.account.setBalance(newBalance);
-                accClient.updateAccount_XML(account);
-                lbBalance.setText(String.valueOf(account.getBalance()));
-            }
+            movement.setTimestamp(new Date());
+            movement.setBalance(newBalance);
             
+            this.account.setBalance(newBalance);
+            this.account.setCreditLine(newLine);
             accClient.updateAccount_XML(this.account);
+            
+            restClient.create_XML(movement, account.getId().toString());
+            lbBalance.setText(String.format("%.2f", newBalance));
+            
             tbMovement.getItems().add(movement);
             tbMovement.refresh();
-            
             btUndo.setDisable(false);
-            restClient.create_XML(movement, account.getId().toString());
-           // LOGGER.info(movement.toString());
-            
+            lbGeneralError.setText("");
+        }
+        catch (NumberFormatException e) {
+            lbGeneralError.setText("Invalid format: Amount must be a number");
         }
         catch(IllegalArgumentException | ClientErrorException e){
             LOGGER.info(e.getMessage());
         }
         catch(Exception e){
             lbGeneralError.setText(e.toString());
+            LOGGER.severe(e.getMessage());
         }
-
     }
-
 }
