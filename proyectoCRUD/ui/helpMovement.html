@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Help page</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            body {
+                font: 16px arial, sans-serif;
+            }            
+            h3 {
+                font: 20px arial, sans-serif;
+                text-decoration: underline;
+                font-weight: bold;
+            }            
+            h4 {
+                font: 18px arial, sans-serif;
+                text-decoration: underline;
+                font-weight: bold;
+            }            
+        </style>    
+    </head>
+    <body>
+        <div>
+            <h3>Account Movements: Help</h3>
+
+            <h4>General Description</h4>
+            <p>This window allows you to view and manage the financial movements of a specific account. 
+            Users can track their transaction history in the central table, register new operations, 
+            or revert the last action performed. Additionally, the updated balance is displayed at the top.</p>
+
+            <h4>Operations</h4>
+
+            <strong>New movement</strong>
+            <p>To register a new operation, the user must select the <strong>Type</strong> of movement 
+            (Deposit or Payment) from the dropdown menu and enter the value in the <strong>Amount</strong> field. 
+            Once the data is entered, click the <strong>New movement</strong> button. 
+            If the operation is successful, the movement will appear in the table and the balance will be updated automatically.</p>
+
+            <strong>Undo last movement</strong>
+            <p>If the user needs to revert the last action performed, click the <strong>Undo last movement</strong> button. 
+            The system will remove the most recent record from the table and restore the account's previous balance.</p>
+
+            <strong>Data Visualization</strong>
+            <p>The central table displays the list of movements with the following details:
+                <ul>
+                    <li><strong>DATE:</strong> The date the movement was recorded.</li>
+                    <li><strong>AMOUNT:</strong> The value of the operation.</li>
+                    <li><strong>TYPE:</strong> The category or type of movement(Deposit/Payment).</li>
+                    <li><strong>BALANCE:</strong> The resulting balance after the operation.</li>
+                </ul>
+                If there are no records, the table would be empty until you create a movemet
+            </p>
+
+            <strong>Exit</strong>
+            <p>Clicking the <strong>Exit</strong> button will close the current view and redirect you back to the <strong>Accounts</strong> window.</p>
+            
+        </div>
+    </body>
+</html>
