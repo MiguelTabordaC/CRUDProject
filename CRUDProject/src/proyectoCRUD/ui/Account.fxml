@@ -8,8 +8,8 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="576.0" prefWidth="1024.0" style="-fx-background-color: FFFFFF;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="proyectoCRUD.ui.AccountController">
    <children>
-       <fx:include fx:id="menuAccount" source="Menu.fxml"/>
-      <ImageView fitHeight="158.0" fitWidth="266.0" layoutX="388.0" layoutY="26.0">
+       <fx:include fx:id="menuAccount" source="Menu.fxml" />
+      <ImageView fitHeight="150.0" fitWidth="266.0" layoutX="387.0" layoutY="36.0">
          <image>
             <Image url="proyectoCRUD/ui/resources/Logo.png" />
          </image>
@@ -29,7 +29,7 @@
             <TableColumn fx:id="tcBeginBalanceTimestamp" prefWidth="113.0" text="DATE" />
         </columns>
       </TableView>
-      <ToggleButton  fx:id="btnAdd" layoutX="904.0" layoutY="230.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="95.0" text="AddAccount" />
+      <ToggleButton fx:id="btnAdd" layoutX="904.0" layoutY="230.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="95.0" text="AddAccount" />
       <Button fx:id="btnRefresh" layoutX="904.0" layoutY="276.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="95.0" text="Refresh" />
       <Button fx:id="btnDelete" layoutX="904.0" layoutY="325.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="95.0" text="Delete" />
       <Button fx:id="btnMovement" layoutX="904.0" layoutY="468.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="95.0" text="Movements" />
