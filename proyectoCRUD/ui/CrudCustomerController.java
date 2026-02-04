@@ -29,8 +29,11 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.util.converter.IntegerStringConverter;
 import javafx.util.converter.LongStringConverter;
+import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.core.GenericType;
+import proyectoCRUD.logic.AccountRESTClient;
 import proyectoCRUD.logic.CustomerRESTClient;
+import proyectoCRUD.model.Account;
 import proyectoCRUD.model.Customer;
 
 /**
@@ -446,11 +449,24 @@ public class CrudCustomerController {
     
     private void handleBtDeleteOnAction(Event event){
         try{
+            Customer customer = (Customer) tbCustomers.getSelectionModel().getSelectedItem();
+            AccountRESTClient accountClient = new AccountRESTClient();
+            
+            List<Account> account = accountClient.findAccountsByCustomerId_XML(
+                    new GenericType<List<Account>>(){
+                    },
+                    customer.getId().toString()
+                    
+            );
+
+            if(account != null &&  !account.isEmpty()){
+                throw new InternalServerErrorException("The user has associated accounts");
+            }
+            
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION,"Are you sure you want to delete this Customer?",ButtonType.YES,ButtonType.NO);
             alert.setTitle("Deletion prompt");
             alert.showAndWait();
-            if (alert.getResult() == ButtonType.YES) {
-                Customer customer = (Customer) tbCustomers.getSelectionModel().getSelectedItem();
+            if (alert.getResult() == ButtonType.YES) { 
                 clientManager.remove(customer.getId().toString());
                 tbCustomers.getItems().remove(customer);
                 bDelete.setDisable(true);
