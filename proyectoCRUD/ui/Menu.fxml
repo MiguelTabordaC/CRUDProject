@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="proyectoCRUD.ui.MenuController">
+   <children>
+      <MenuBar prefHeight="26.0" prefWidth="1024.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="Operations">
+            <items>
+              <MenuItem fx:id="menuLogOut" mnemonicParsing="false" onAction="#menuLogOut" text="Log out" />
+                  <MenuItem fx:id="menuExitApp" mnemonicParsing="false" onAction="#menuExitApp" text="Exit App" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem fx:id="helpCustomer" mnemonicParsing="false" onAction="#helpCustomer" text="Customer" />
+                  <MenuItem fx:id="helpAccount" mnemonicParsing="false" onAction="#helpAccount" text="Account" />
+                  <MenuItem fx:id="helpMovement" mnemonicParsing="false" onAction="#helpMovement" text="Movement" />
+                  <MenuItem fx:id="helpAboutApp" mnemonicParsing="false" onAction="#helpAboutApp" text="AboutApp" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+   </children>
+</HBox>

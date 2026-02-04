@@ -6,6 +6,7 @@
 package proyectoCRUD.ui;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
@@ -25,6 +26,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import javafx.util.converter.IntegerStringConverter;
 import javafx.util.converter.LongStringConverter;
 import javax.ws.rs.core.GenericType;
@@ -36,6 +38,10 @@ import proyectoCRUD.model.Customer;
  * @author david
  */
 public class CrudCustomerController {
+    
+
+    @FXML private Window menuCustomer;
+    @FXML private MenuController menuController;
     
     @FXML
     private TableColumn tbID;
@@ -72,7 +78,7 @@ public class CrudCustomerController {
     
     private final Stage CustomerStage = new Stage();
     private Scene scene;
-    
+     
     private final CustomerRESTClient clientManager = new CustomerRESTClient();
     
     private static final Logger LOGGER=Logger.getLogger("projectinterfaces.ui");
@@ -128,6 +134,7 @@ public class CrudCustomerController {
                 catch(Exception e){
                     LOGGER.info(e.getMessage());
                     tbCustomers.refresh();
+                    new Alert(Alert.AlertType.INFORMATION,e.getMessage()).showAndWait();
                 }
                 
         });
@@ -156,6 +163,7 @@ public class CrudCustomerController {
                 catch(Exception e){
                     LOGGER.info(e.getMessage());
                     tbCustomers.refresh();
+                    new Alert(Alert.AlertType.INFORMATION,e.getMessage()).showAndWait();
                 }
                 
         });
@@ -185,6 +193,7 @@ public class CrudCustomerController {
                 catch(Exception e){
                     LOGGER.info(e.getMessage());
                     tbCustomers.refresh();
+                    new Alert(Alert.AlertType.INFORMATION,e.getMessage()).showAndWait();
                 }
                 
         });
@@ -214,6 +223,7 @@ public class CrudCustomerController {
                 catch(Exception e){
                     LOGGER.info(e.getMessage());
                     tbCustomers.refresh();
+                    new Alert(Alert.AlertType.INFORMATION,e.getMessage()).showAndWait();
                 }
                 
         });
@@ -243,6 +253,7 @@ public class CrudCustomerController {
                 catch(Exception e){
                     LOGGER.info(e.getMessage());
                     tbCustomers.refresh();
+                    new Alert(Alert.AlertType.INFORMATION,e.getMessage()).showAndWait();
                 }
                 
         });
@@ -272,6 +283,7 @@ public class CrudCustomerController {
                 catch(Exception e){
                     LOGGER.info(e.getMessage());
                     tbCustomers.refresh();
+                    new Alert(Alert.AlertType.INFORMATION,e.getMessage()).showAndWait();
                 }
                 
         });
@@ -300,6 +312,7 @@ public class CrudCustomerController {
                 catch(Exception e){
                     LOGGER.info(e.getMessage());
                     tbCustomers.refresh();
+                    new Alert(Alert.AlertType.INFORMATION,e.getMessage()).showAndWait();
                 }
                 
         });
@@ -329,6 +342,7 @@ public class CrudCustomerController {
                 catch(Exception e){
                     LOGGER.info(e.getMessage());
                     tbCustomers.refresh();
+                    new Alert(Alert.AlertType.INFORMATION,e.getMessage()).showAndWait();
                 }
                 
         });
@@ -358,6 +372,7 @@ public class CrudCustomerController {
                 catch(Exception e){
                     LOGGER.info(e.getMessage());
                     tbCustomers.refresh();
+                    new Alert(Alert.AlertType.INFORMATION,e.getMessage()).showAndWait();
                 }
                 
         });
@@ -386,6 +401,7 @@ public class CrudCustomerController {
                 catch(Exception e){
                     LOGGER.info(e.getMessage());
                     tbCustomers.refresh();
+                    new Alert(Alert.AlertType.INFORMATION,e.getMessage()).showAndWait();
                 }
                 
         });
@@ -393,7 +409,8 @@ public class CrudCustomerController {
         
        
       
-    }
+    } 
+    
     private void handleBtExitOnAction(Event event){
         try{
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
@@ -404,13 +421,12 @@ public class CrudCustomerController {
             if (alert.getResult() == ButtonType.YES) {
                 //Lanzamos la ventana emergente para pedir confirmación de salida
                 CustomerStage.close();
-                
-
             }
             event.consume();
         }
         catch(Exception e){
             LOGGER.info(e.getMessage());
+            new Alert(Alert.AlertType.INFORMATION,e.getMessage()).showAndWait();
         }
     }
     
@@ -444,6 +460,7 @@ public class CrudCustomerController {
         }
         catch(Exception e){
             LOGGER.info(e.getMessage());
+            new Alert(Alert.AlertType.INFORMATION,e.getMessage()).showAndWait();
         }
         
     }
@@ -453,6 +470,7 @@ public class CrudCustomerController {
         }
         catch (Exception e){
             LOGGER.info(e.getMessage());
+            new Alert(Alert.AlertType.INFORMATION,e.getMessage()).showAndWait();
         }
     }
     
@@ -462,14 +480,24 @@ public class CrudCustomerController {
             clientManager.create_XML(customer);
             tbCustomers.getItems().add(0, customer);
             reloadTable();
-            tbCustomers.requestFocus();
-            tbCustomers.getSelectionModel().select(0);
+            
+            ObservableList<Customer> items = tbCustomers.getItems();
+            
+            for (Customer c : items) {
+                    if (c.getFirstName() == null || c.getFirstName().trim().isEmpty()) {
+                    tbCustomers.getSelectionModel().select(c);
+                    tbCustomers.scrollTo(c);
+                    tbCustomers.requestFocus();
+                    break; 
+                }
+            }
 
 
             
         }
         catch(Exception e){
             LOGGER.info(e.getMessage());
+            new Alert(Alert.AlertType.INFORMATION,e.getMessage()).showAndWait();
         }
     }
     

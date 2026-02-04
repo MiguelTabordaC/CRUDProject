@@ -1,17 +1,13 @@
-
-package proyectoCRUD.model;
-
-
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
-//package <TODO>;
+package proyectoCRUD.model;
 
 import java.io.Serializable;
 import java.util.Set;
+import javafx.beans.property.SimpleStringProperty;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -20,6 +16,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * data and relational data for accessing customer accounts data. 
  * @author Javier Martín Uría
  */
+
 @XmlRootElement
 public class Customer implements Serializable {
 
@@ -27,6 +24,7 @@ public class Customer implements Serializable {
     /**
      * Identification field for client.
      */
+
     private Long id;
     /**
      * First name of the customer.
@@ -68,9 +66,6 @@ public class Customer implements Serializable {
      * Customer's password for basic authentication.
      */
     private String password;
-    /**
-     * Relational field for customer's accounts.
-     */
     /**
      * 
      * @return the id of the customer.
@@ -205,6 +200,10 @@ public class Customer implements Serializable {
     public void setPassword(String password) {
         this.password = password;
     }
+    /**
+     * @return the accounts
+     */
+    
     /**
      * Integer representation for Customer instance.
      * @return 

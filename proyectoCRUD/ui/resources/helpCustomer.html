@@ -1,0 +1,308 @@
+<!DOCTYPE html> 
+
+<html lang="en"> 
+
+<head> 
+
+    <meta charset="UTF-8"> 
+
+    <title>Documentation – Bank Customer Management</title> 
+
+    <style> 
+
+        body { 
+
+            font-family: Arial, Helvetica, sans-serif; 
+
+            line-height: 1.6; 
+
+            margin: 40px; 
+
+            background-color: #f8f9fa; 
+
+            color: #333; 
+
+        } 
+
+        h1, h2, h3 { 
+
+            color: #2c3e50; 
+
+        } 
+
+        code { 
+
+            background-color: #e9ecef; 
+
+            padding: 2px 5px; 
+
+            border-radius: 4px; 
+
+            font-size: 0.95em; 
+
+        } 
+
+        ul { 
+
+            margin-left: 20px; 
+
+        } 
+
+        .section { 
+
+            margin-bottom: 30px; 
+
+        } 
+
+        .note { 
+
+            background-color: #fff3cd; 
+
+            padding: 10px; 
+
+            border-left: 4px solid #ffc107; 
+
+            margin-top: 10px; 
+
+        } 
+
+    </style> 
+
+</head> 
+
+<body> 
+
+  
+
+<h1>Bank Customer Management Application</h1> 
+
+  
+
+<p> 
+
+This application allows the managment of all customers in the database.
+
+This includes the creation, deletion and updating
+
+</p> 
+
+  
+
+<div class="section"> 
+
+    <h2>1. General Structure</h2> 
+
+    <p> 
+
+        The application is developed in <strong>JavaFX</strong> following a client-server pattern, 
+
+        where the graphical interface communicates with a REST backend 
+
+        via the <code>CustomerRESTClient</code> class. 
+
+    </p> 
+
+    <p> 
+
+        The main view displays a table (<code>TableView</code>) with all the customers 
+
+        registered in the database. 
+
+    </p> 
+
+</div> 
+
+  
+
+<div class="section"> 
+
+    <h2>2. Customer Table</h2> 
+
+    <p> 
+
+        The table displays the following information for each customer: 
+
+    </p> 
+
+    <ul> 
+
+        <li><strong>ID</strong>: Unique identifier of the customer (read-only).</li> 
+
+        <li><strong>First name</strong>: (editable).</li> 
+
+        <li><strong>Middle initial</strong>: (editable).</li> 
+
+        <li><strong>Last name</strong>: (editable).</li> 
+
+        <li><strong>Street</strong>: (editable).</li> 
+
+        <li><strong>City</strong>: (editable).</li> 
+
+        <li><strong>State</strong>: (editable).</li> 
+
+        <li><strong>Zip</strong>: (editable).</li> 
+
+        <li><strong>Phone</strong>: (editable).</li> 
+
+        <li><strong>Email</strong>: (editable).</li> 
+
+        <li><strong>Password</strong>: (editable).</li> 
+
+    </ul> 
+
+</div> 
+
+  
+
+<div class="section"> 
+
+    <h2>3. Data Editing</h2> 
+
+    <p>
+
+        All fields except the field "ID" can be edited, each field has its own validation:
+
+    
+    </p>
+
+    <ul> 
+
+
+        <li><strong>First name</strong>: Name must not be too long nor null.</li> 
+
+        <li><strong>Middle initial</strong>: Middle initial must contain just one letter and not be null .</li> 
+
+        <li><strong>Last name</strong>: Surname must not be too long nor null.</li> 
+
+        <li><strong>Street</strong>: Street must not be too long nor null.</li> 
+
+        <li><strong>City</strong>: City must not be too long nor null.</li> 
+
+        <li><strong>State</strong>: State must not be too long nor null.</li> 
+
+        <li><strong>Zip</strong>: Zip must contain just numbers, only 5 digits and not be null.</li> 
+
+        <li><strong>Phone</strong>: Phone must just contain numbers, have a set length, and not be null.</li> 
+
+        <li><strong>Email</strong>: Email must follow the standart form of an email and not be null.</li> 
+
+        <li><strong>Password</strong>: Password must be between 5 and 30 characters, contain at least one number and one upper case.</li> 
+
+    </ul> 
+        
+
+    
+
+</div> 
+
+  
+
+<div class="section"> 
+
+    <h2>4. Creating New Customers</h2> 
+
+    <p> 
+
+        Account creation is done via a button: 
+
+    </p> 
+
+    <ul> 
+
+        <li>When pressed, a new entry in the table is created and selected.</li> 
+
+        <li>All the fields except the id are empty.</li> 
+
+        <li>The user can leave empty fields at the moment of creating.</li> 
+
+
+    </ul> 
+ 
+
+</div> 
+
+  
+
+<div class="section"> 
+
+    <h2>5. Update and Persistence</h2> 
+
+    <p> 
+
+        For existing customers, all modifications made from the table 
+
+        is automatically sent to the backend via REST calls. 
+
+    </p> 
+
+    <p> 
+
+        This ensures that changes are reflected immediately in the database. 
+
+    </p> 
+
+</div> 
+
+  
+
+<div class="section"> 
+
+    <h2>6. Data Refresh</h2> 
+
+    <p> 
+
+        The <strong>Refresh</strong> button requests all customers 
+
+        from the server again and reloads the table with the updated data. 
+
+    </p> 
+
+    <p> 
+
+        This mechanism ensures that the view is synchronized with the actual server state. 
+
+    </p> 
+
+</div> 
+
+  
+
+<div class="section"> 
+
+    <h2>7. Deleting </h2> 
+
+    <p> 
+
+        A customer can only be deleted if it has no associated accounts. 
+
+        Before proceeding, the application requests confirmation from the user. 
+
+    </p> 
+
+</div> 
+
+  
+
+  
+
+<div class="section"> 
+
+    <h2>9. Conclusion</h2> 
+
+    <p> 
+
+        The application provides complete and secure bank customer management, 
+
+        combining interface validations, automatic data updates, and 
+
+        efficient communication with the REST backend. 
+
+    </p> 
+
+</div> 
+
+  
+
+</body> 
+
+</html>

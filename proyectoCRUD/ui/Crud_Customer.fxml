@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1366.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="proyectoCRUD.ui.CrudCustomerController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1366.0" style="-fx-background-color: #00000000;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="proyectoCRUD.ui.CrudCustomerController">
    <children>
+      <fx:include fx:id="menuAccount" source="Menu.fxml" />
       <Label layoutX="275.0" layoutY="87.0" prefHeight="19.0" prefWidth="202.0" text="Customers administration">
          <font>
             <Font size="15.0" />
@@ -44,5 +46,10 @@
             <Font size="12.0" />
          </font>
       </Button>
+      <ImageView fitHeight="177.0" fitWidth="165.0" layoutX="76.0" layoutY="44.0" pickOnBounds="true" preserveRatio="true">
+          <image>
+            <Image url="proyectoCRUD/ui/resources/logoRecortado.png" />
+         </image>
+      </ImageView>
    </children>
 </Pane>
