@@ -12,9 +12,9 @@ import static org.junit.Assert.*;
  *
  * @author felipe
  */
-public class AccountControllerTEST {
+public class AccountControllerTest {
     
-    public AccountControllerTEST() {
+    public AccountControllerTest() {
     }
 
     @Test
